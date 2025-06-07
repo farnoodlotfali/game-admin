@@ -9,6 +9,7 @@ import {
 
 import type { Route } from "./+types/root";
 import "./app.css";
+import { ThemeProvider, type Theme } from "./components/theme-provider";
 
 export const links: Route.LinksFunction = () => [
   { rel: "preconnect", href: "https://fonts.googleapis.com" },
@@ -23,17 +24,21 @@ export const links: Route.LinksFunction = () => [
   },
 ];
 
+const defaultTheme: Theme = "dark";
+
 export function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="en" className={defaultTheme}>
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <Meta />
         <Links />
       </head>
-      <body>
-        {children}
+      <body className="font-sans" >
+        <ThemeProvider defaultTheme={defaultTheme} storageKey="vite-ui-theme">
+          {children}
+        </ThemeProvider>
         <ScrollRestoration />
         <Scripts />
       </body>
@@ -62,8 +67,9 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
+    <main className="pt-16 p-4 container mx-auto bg-red-800  ">
       <h1>{message}</h1>
+      <h2>A Real Noob You Are!! a Dog Ancestor, a Pile of Shit </h2>
       <p>{details}</p>
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
