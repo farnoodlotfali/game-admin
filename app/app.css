@@ -4,8 +4,9 @@
 @custom-variant dark (&:is(.dark *));
 
 @theme {
-  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif,
-    "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-sans:
+    "Inter", ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji",
+    "Segoe UI Symbol", "Noto Color Emoji";
 }
 
 html,
@@ -15,6 +16,10 @@ body {
   @media (prefers-color-scheme: dark) {
     color-scheme: dark;
   }
+}
+
+* {
+  /* box-sizing: border-box; */
 }
 
 @theme inline {
@@ -86,19 +91,7 @@ body {
   --card-foreground: oklch(0.141 0.005 285.823);
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.141 0.005 285.823);
-  --primary: #ff2056;
-  --primary-50: #ffe4e6;
-  --primary-100: #ffbdcd;
-  --primary-200: #ff92ac;
-  --primary-300: #ff648a;
-  --primary-400: #ff4170;
-  --primary-500: #ff2058; /* main */
-  --primary-600: #ee1956;
-  --primary-700: #d81253;
-  --primary-800: #c40551;
-  --primary-900: #a1004d;
-  --primary-950: #4c0519;
-
+  --primary: oklch(0.645 0.246 16.439);
   --primary-foreground: oklch(0.969 0.015 12.422);
   --secondary: oklch(0.967 0.001 286.375);
   --secondary-foreground: oklch(0.21 0.006 285.885);
@@ -107,8 +100,8 @@ body {
   --accent: oklch(0.967 0.001 286.375);
   --accent-foreground: oklch(0.21 0.006 285.885);
   --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.645 0.246 16.439 / 50%);
-  --input: oklch(0.645 0.246 16.439 / 50%);
+  --border: oklch(0.92 0.004 286.32);
+  --input: oklch(0.92 0.004 286.32);
   --ring: oklch(0.645 0.246 16.439);
   --chart-1: oklch(0.646 0.222 41.116);
   --chart-2: oklch(0.6 0.118 184.704);
@@ -141,8 +134,8 @@ body {
   --accent: oklch(0.274 0.006 286.033);
   --accent-foreground: oklch(0.985 0 0);
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(0.645 0.246 16.439 / 50%);
-  --input: oklch(0.645 0.246 16.439 / 50%);
+  --border: oklch(1 0 0 / 10%);
+  --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.645 0.246 16.439);
   --chart-1: oklch(0.488 0.243 264.376);
   --chart-2: oklch(0.696 0.17 162.48);
@@ -167,3 +160,4 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
