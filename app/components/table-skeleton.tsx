@@ -16,17 +16,17 @@ export const TableSkeleton = ({
     <>
       <Table className="border">
         <TableHeader className="bg-primary">
-          <TableRow className=" pointer-events-none">
+          <TableRow className="pointer-events-none">
             {Array.from({ length: headLength }).map((_, i) => {
               return (
                 <TableHead
                   key={i}
-                  className="w-[100px] "
+                  className="w-[100px]"
                   style={{
                     padding: `0px ${i * 2 + 5}px`,
                   }}
                 >
-                  <Skeleton className=" h-6 " />
+                  <Skeleton className="h-6" />
                 </TableHead>
               );
             })}
@@ -35,9 +35,9 @@ export const TableSkeleton = ({
         <TableBody>
           {Array.from({ length: rows }).map((_, i) => {
             return (
-              <TableRow key={i} className=" pointer-events-none">
+              <TableRow key={i} className="pointer-events-none">
                 <TableCell colSpan={headLength}>
-                  <Skeleton className=" h-6 w-full" />
+                  <Skeleton className="h-6 w-full" />
                 </TableCell>
               </TableRow>
             );
@@ -45,7 +45,12 @@ export const TableSkeleton = ({
         </TableBody>
       </Table>
 
-      {showPagination && <Skeleton className=" h-6 w-3/5 mx-auto mt-3" />}
+      {showPagination && (
+        <div className="my-3 flex items-center justify-start">
+          <Skeleton className="h-6 w-1/8" />
+          <Skeleton className="mx-auto h-6 w-3/5" />
+        </div>
+      )}
     </>
   );
 };

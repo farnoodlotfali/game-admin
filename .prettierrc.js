@@ -7,7 +7,7 @@ const config = {
   tabWidth: 2,
   endOfLine: "crlf",
   trailingComma: "es5",
-  plugins: ["@ianvs/prettier-plugin-sort-imports"],
+  plugins: ["@ianvs/prettier-plugin-sort-imports", "prettier-plugin-tailwindcss"],
   importOrder: [
     "^react$",
     "^react-router$",

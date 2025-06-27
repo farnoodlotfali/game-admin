@@ -1,13 +1,12 @@
 import type { PropsWithChildren } from "react";
-import { ArrowDownNarrowWide, ArrowUpNarrowWide } from "lucide-react";
+import { ArrowDownNarrowWide, ArrowUpNarrowWide, ListFilter } from "lucide-react";
 
 import { PaginationControl } from "./pagination-control";
 import { Button } from "./ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import {
   Table as ShadCnTable,
-  TableBody,
   TableCaption,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
@@ -23,8 +22,10 @@ type TableProps = {
   filters?: {
     sort?: string;
     order?: string;
+    page?: string;
+    limit?: string;
   };
-  setFilters: (filters: { sort?: string; order?: string; page?: string }) => void;
+  setFilters: (filters: { sort?: string; order?: string; page?: string; limit?: string }) => void;
   pagination: PaginationType<any>["pagination"];
   caption?: string;
 };
@@ -45,6 +46,14 @@ export const Table: React.FC<PropsWithChildren<TableProps>> = ({
       order: newDirection,
     });
   };
+
+  const handlePerPage = (value: string) => {
+    setFilters({
+      limit: value,
+      page: "1",
+    });
+  };
+
   return (
     <>
       <ShadCnTable className="border">
@@ -56,6 +65,7 @@ export const Table: React.FC<PropsWithChildren<TableProps>> = ({
                 <TableHead key={he.label}>
                   {he.sortable ? (
                     <Button variant="ghost" onClick={() => handleSort(he.name!)}>
+                      {filters?.sort !== he.name && <ListFilter />}
                       {he.label}
                       {filters?.sort === he.name && (
                         <>
@@ -78,7 +88,22 @@ export const Table: React.FC<PropsWithChildren<TableProps>> = ({
         {children}
       </ShadCnTable>
 
-      <PaginationControl setFilters={setFilters} pagination={pagination} />
+      <div className="flex flex-col gap-3 items-center md:flex-row mt-3">
+        <div className="flex items-center gap-1">
+          <span className="text-[6px]">Per Page</span>
+          <Select value={filters?.limit || "10"} onValueChange={(e) => handlePerPage(e)}>
+            <SelectTrigger className="w-[120px]">
+              <SelectValue placeholder="Per Page" className="text-[5px]" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="10">10</SelectItem>
+              <SelectItem value="15">15</SelectItem>
+              <SelectItem value="20">20</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+        <PaginationControl setFilters={setFilters} pagination={pagination} />
+      </div>
     </>
   );
 };
