@@ -1,1 +1,1 @@
-export type SearchParam = number | string | null;
+export type SearchParam = string | null;

@@ -1,1 +1,8 @@
-export { useGames, gameQueryOptions, useSuspenseGames } from "./game/useGames";
+export { useGames, gameQueryOptions, useSuspenseGames, gameSearchParams } from "./game/useGames";
+export {
+  genreQueryOptions,
+  useGenres,
+  useSuspenseGenres,
+  genreInfiniteQueryOptions,
+  useInfiniteGenres,
+} from "./genre/useGenres";

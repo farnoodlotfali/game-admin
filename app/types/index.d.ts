@@ -1,4 +1,9 @@
-import type { QueryKey, UseQueryOptions } from "@tanstack/react-query";
+import type {
+  InfiniteData,
+  QueryKey,
+  UseInfiniteQueryOptions,
+  UseQueryOptions,
+} from "@tanstack/react-query";
 
 export interface PaginationType<T> {
   items: T;
@@ -19,7 +24,12 @@ export interface ResponsePaginationType<T = []> {
   data: PaginationType<T>;
 }
 
-export type HookApiOptions<T> = Omit<
-  UseQueryOptions<ResponsePaginationType<T>, Error, ResponsePaginationType<T>, QueryKey>,
+export type HookApiOptions = Omit<
+  UseQueryOptions<ResponsePaginationType<any>, Error, ResponsePaginationType<any>, QueryKey>,
   "queryKey" | "queryFn"
+>;
+
+export type HookApiInfiniteOptions = Omit<
+  UseInfiniteQueryOptions<any, Error>,
+  "queryKey" | "queryFn" | "getNextPageParam" | "initialPageParam"
 >;

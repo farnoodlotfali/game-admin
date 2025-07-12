@@ -1,18 +1,37 @@
 import { Suspense } from "react";
 import { Link } from "react-router";
 import type { Route } from "./+types/home";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { User2Icon } from "lucide-react";
-import { createLoader, parseAsString, useQueryStates } from "nuqs";
-import { toast } from "sonner";
+import { format } from "date-fns";
+import { ChevronDown } from "lucide-react";
+import {
+  createLoader,
+  createSerializer,
+  parseAsArrayOf,
+  parseAsInteger,
+  parseAsJson,
+  parseAsString,
+  useQueryStates,
+} from "nuqs";
+import { useForm } from "react-hook-form";
+import { z } from "zod";
 
+import { MultiGenresChooser } from "@/components/choosers/multi-genres-chooser";
+import { FormInputs } from "@/components/form";
 import { ModeToggle } from "@/components/mode-toggle";
 import { Table } from "@/components/table";
 import { TableSkeleton } from "@/components/table-skeleton";
 import { Button } from "@/components/ui/button";
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
+import { Form } from "@/components/ui/form";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
-import { gameQueryOptions, useSuspenseGames } from "@/hooks/queries";
+import { INPUT_TYPES } from "@/constants/input-types";
+import { gameQueryOptions, gameSearchParams, useSuspenseGames } from "@/hooks/queries";
+import { dateFilterHelper } from "@/lib/date-filter-helper";
 import { clientQueryClient, serverQueryClient } from "@/lib/queryClient";
+import type { FormInputsType } from "@/types/form-inputs-type";
+import { genreArraySchema, genreSchema } from "@/types/schema/genre";
 
 export function meta({}: Route.MetaArgs) {
   return [
@@ -21,40 +40,133 @@ export function meta({}: Route.MetaArgs) {
   ];
 }
 
-const coordinatesSearchParams = {
-  page: parseAsString.withDefault(""),
-  limit: parseAsString.withDefault(""),
-  order: parseAsString.withDefault(""),
-  sort: parseAsString.withDefault(""),
-  q: parseAsString.withDefault(""),
-};
-
-const loadSearchParams = createLoader(coordinatesSearchParams);
-
+const loadSearchParams = createLoader(gameSearchParams);
 // ssr
-export function loader({ request }: Route.LoaderArgs) {
-  const queryClient = serverQueryClient();
-  const filter = loadSearchParams(request);
+// export function loader({ request }: Route.LoaderArgs) {
+//   const queryClient = serverQueryClient();
+//   const filters = loadSearchParams(request);
 
-  queryClient.prefetchQuery(gameQueryOptions({}, filter));
+//   queryClient.prefetchQuery(gameQueryOptions({ filters }));
 
-  return {
-    dehydratedState: dehydrate(queryClient),
-    limit: filter.limit,
-  };
-}
+//   return {
+//     dehydratedState: dehydrate(queryClient),
+//     limit: filters.limit,
+//   };
+// }
 
 // csr
 export function clientLoader({ request }: Route.LoaderArgs) {
-  const filter = loadSearchParams(request);
+  const filters = loadSearchParams(request);
 
-  clientQueryClient.prefetchQuery(gameQueryOptions({}, filter));
+  clientQueryClient.prefetchQuery(gameQueryOptions({ filters }));
 
   return {
     dehydratedState: dehydrate(clientQueryClient),
-    limit: filter.limit,
+    limit: filters.limit,
   };
 }
+
+const formSchema = z.object({
+  // q: z.string().min(2, {
+  //   message: "Game title must be at least 2 characters.",
+  // }),
+  releaseDateFrom: z.string(),
+  releaseDateTo: z.string(),
+  genre_id: z.array(genreSchema).min(1, { message: "At least one genre is required." }),
+});
+
+const FilterBox = () => {
+  const [filters, setFilters] = useQueryStates(gameSearchParams, {
+    history: "push",
+    // history: "replace",
+  });
+
+  const form = useForm<z.infer<typeof formSchema>>({
+    resolver: zodResolver(formSchema),
+    defaultValues: filters,
+  });
+
+  function onSubmit(values: z.infer<typeof formSchema>) {
+    setFilters({
+      // ...values,
+      // releaseDateFrom: dateFilterHelper(values?.releaseDateFrom),
+      // releaseDateTo: dateFilterHelper(values?.releaseDateTo),
+      genre_id: values?.genre_id,
+      // genre_id: JSON.stringify(values?.genre_id),
+      // genre_id: genreArraySchema.parse(values?.genre_id),
+    });
+  }
+
+  const inputs: FormInputsType[] = [
+    {
+      inputType: INPUT_TYPES.TEXT,
+      label: "Game Title",
+      name: "q",
+      gridClassName: " md:col-span-3",
+      props: {
+        placeholder: "Game Title",
+      },
+    },
+    {
+      inputType: INPUT_TYPES.DATE,
+      label: "Release Date From",
+      name: "releaseDateFrom",
+      gridClassName: " md:col-span-3",
+    },
+    {
+      inputType: INPUT_TYPES.DATE,
+      label: "Release Date To",
+      name: "releaseDateTo",
+      gridClassName: " md:col-span-3",
+    },
+    {
+      inputType: INPUT_TYPES.CUSTOM,
+      customView: MultiGenresChooser,
+      label: "Genres",
+      name: "genre_id",
+      gridClassName: " md:col-span-3",
+    },
+  ];
+
+  return (
+    <Collapsible className="group/collapsible mb-3">
+      <CollapsibleTrigger asChild>
+        <Button variant="secondary" className="w-full">
+          Filters
+          <ChevronDown className="ml-auto transition-transform group-data-[state=open]/collapsible:rotate-180" />
+        </Button>
+      </CollapsibleTrigger>
+      <CollapsibleContent>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="bg-secondary my-2 rounded-lg p-4">
+            <FormInputs control={form.control} inputs={inputs} />
+
+            <Button className="mt-3" type="submit">
+              Submit
+            </Button>
+          </form>
+        </Form>
+      </CollapsibleContent>
+    </Collapsible>
+  );
+};
+
+const Home = ({ loaderData }: Route.ComponentProps) => {
+  return (
+    <HydrationBoundary state={loaderData.dehydratedState}>
+      <div>
+        {/* <div className="flex min-h-svh flex-col items-center justify-center"> */}
+        <FilterBox />
+        {/* <MultiGenresChooser /> */}
+        <Suspense fallback={<TableSkeleton rows={Number(loaderData.limit) || 10} />}>
+          <Home1 />
+        </Suspense>
+        <ModeToggle />
+        <Link to="/about">aboutabout</Link>
+      </div>
+    </HydrationBoundary>
+  );
+};
 
 const head_tables = [
   {
@@ -88,50 +200,12 @@ const head_tables = [
   },
 ];
 
-const Home = ({ loaderData }: Route.ComponentProps) => {
-  return (
-    <HydrationBoundary state={loaderData.dehydratedState}>
-      <div>
-        {/* <div className="flex min-h-svh flex-col items-center justify-center"> */}
-        <Button
-          onClick={() => {
-            // toast("Event has been created", {
-            //   description: "Sunday, December 03, 2023 at 9:00 AM",
-            //   action: {
-            //     label: "Undo",
-            //     onClick: () => console.log("Undo"),
-            //   },
-            //   icon: <User2Icon />,
-            //   duration: 1222000,
-            //   closeButton: true,
-            //   // cancel: <Button>1212</Button>,
-            //   classNames:{
-            //     closeButton:'!text-accent-foreground !border-accent-foreground/30 hover:!bg-accent !border'
-            //   },
-            //   // dismissible:true
-
-            // });
-            toast.warning("Event has been created.");
-          }}
-        >
-          <User2Icon className="hover:!bg-accent hover:!text-accent-foreground dark:hover:!bg-accent/50" />
-        </Button>
-        <Suspense fallback={<TableSkeleton rows={Number(loaderData.limit) || 10} />}>
-          <Home1 />
-        </Suspense>
-        <ModeToggle />
-        <Link to="/about">aboutabout</Link>
-      </div>
-    </HydrationBoundary>
-  );
-};
-
 function Home1() {
-  const [filters, setFilters] = useQueryStates(coordinatesSearchParams, {
+  const [filters, setFilters] = useQueryStates(gameSearchParams, {
     history: "replace",
   });
 
-  const { data } = useSuspenseGames({}, filters);
+  const { data } = useSuspenseGames({ filters });
 
   return (
     <>

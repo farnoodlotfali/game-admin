@@ -14,18 +14,17 @@ import {
 import { useGames } from "@/hooks/queries";
 import { gameQueryOptions } from "@/hooks/queries";
 import { clientQueryClient, serverQueryClient } from "@/lib/queryClient";
-import { Welcome } from "../welcome/welcome";
 
 export async function loader() {
   const queryClient = serverQueryClient();
 
-  await queryClient.prefetchQuery(gameQueryOptions());
+  await queryClient.prefetchQuery(gameQueryOptions({}));
   return {
     dehydratedState: dehydrate(queryClient),
   };
 }
 export async function clientLoader() {
-  await clientQueryClient.prefetchQuery(gameQueryOptions());
+  await clientQueryClient.prefetchQuery(gameQueryOptions({}));
 
   return {
     dehydratedState: dehydrate(clientQueryClient),
@@ -41,7 +40,7 @@ export default function About({ loaderData }: Route.ComponentProps) {
 }
 
 function About1() {
-  const { data } = useGames();
+  const { data } = useGames({});
 
   return (
     <div className="flex min-h-svh flex-col items-center justify-center">
@@ -99,5 +98,4 @@ function About1() {
     </div>
   );
 
-  return <Welcome />;
 }
