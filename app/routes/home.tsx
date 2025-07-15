@@ -1,25 +1,14 @@
 import { Suspense } from "react";
-import { Link } from "react-router";
 import type { Route } from "./+types/home";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
-import { format } from "date-fns";
 import { ChevronDown } from "lucide-react";
-import {
-  createLoader,
-  createSerializer,
-  parseAsArrayOf,
-  parseAsInteger,
-  parseAsJson,
-  parseAsString,
-  useQueryStates,
-} from "nuqs";
+import { createLoader, useQueryStates } from "nuqs";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { MultiGenresChooser } from "@/components/choosers/multi-genres-chooser";
 import { FormInputs } from "@/components/form";
-import { ModeToggle } from "@/components/mode-toggle";
 import { Table } from "@/components/table";
 import { TableSkeleton } from "@/components/table-skeleton";
 import { Button } from "@/components/ui/button";
@@ -28,15 +17,17 @@ import { Form } from "@/components/ui/form";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { INPUT_TYPES } from "@/constants/input-types";
 import { gameQueryOptions, gameSearchParams, useSuspenseGames } from "@/hooks/queries";
-import { dateFilterHelper } from "@/lib/date-filter-helper";
-import { clientQueryClient, serverQueryClient } from "@/lib/queryClient";
+import { clientQueryClient } from "@/lib/queryClient";
 import type { FormInputsType } from "@/types/form-inputs-type";
-import { genreArraySchema, genreSchema } from "@/types/schema/genre";
+import { genreSchema } from "@/types/schema/genre";
 
-export function meta({}: Route.MetaArgs) {
+export function meta() {
   return [
-    { title: "New React Router App" },
-    { name: "description", content: "Welcome to React Router!" },
+    { title: "Games List" },
+    {
+      name: "description",
+      content: "Browse and manage games list.",
+    },
   ];
 }
 
@@ -161,8 +152,6 @@ const Home = ({ loaderData }: Route.ComponentProps) => {
         <Suspense fallback={<TableSkeleton rows={Number(loaderData.limit) || 10} />}>
           <Home1 />
         </Suspense>
-        <ModeToggle />
-        <Link to="/about">aboutabout</Link>
       </div>
     </HydrationBoundary>
   );

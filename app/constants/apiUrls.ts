@@ -5,4 +5,7 @@ export const API_URL = {
   genre: {
     genres: "/genres",
   },
+  publisher: {
+    publishers: "/publishers",
+  },
 };
