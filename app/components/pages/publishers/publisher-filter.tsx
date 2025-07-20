@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
 import { Form } from "@/components/ui/form";
 import { INPUT_TYPES } from "@/constants/input-types";
-import { publisherSearchParams } from "@/hooks/queries/publisher/usePublishers";
+import { publisherSearchParams } from "@/hooks/queries";
 import type { FormInputsType } from "@/types/form-inputs-type";
 
 const formSchema = z.object({

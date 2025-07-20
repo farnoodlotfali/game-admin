@@ -6,6 +6,7 @@ import { API_URL } from "@/constants/apiUrls";
 import { QUERY_KEYS } from "@/constants/keys";
 import { renderQueryKey } from "@/lib/renderQueryKey";
 import type { HookApiOptions, ResponsePaginationType } from "@/types";
+import type { IPublisher } from "@/types/schema/publisher";
 
 export const publisherSearchParams = {
   page: parseAsString.withDefault(""),
@@ -28,29 +29,21 @@ type PublisherFilters = {
 };
 
 type Parameters = { options?: HookApiOptions; filters?: PublisherFilters };
-type Publisher = {
-  id: number;
-  title: string;
-  country: string;
-  founding_date: string;
-  website_url: string;
-  image_url: string;
-};
 
-type PublisherReturn = ResponsePaginationType<Publisher[]>;
-
+type PublisherReturn = ResponsePaginationType<IPublisher[]>;
 
 export const publisherQueryOptions = ({ filters = {}, options }: Parameters) => {
   const queryParams = serialize(filters);
   return queryOptions({
     queryKey: renderQueryKey([QUERY_KEYS.publishers, filters]),
     queryFn: () =>
-      fetcher.get<PublisherReturn>(`${API_URL.publisher.publishers}${queryParams}`).then((res) => res),
+      fetcher
+        .get<PublisherReturn>(`${API_URL.publisher.publishers}${queryParams}`)
+        .then((res) => res),
     staleTime: 30 * 1000,
     ...options,
   });
 };
-
 
 export const usePublishers = (props: Parameters) => {
   return useQuery<PublisherReturn>(publisherQueryOptions(props));

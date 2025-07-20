@@ -37,4 +37,7 @@ export type FormInputsType =
     })
   | (CustomInputType & {
       inputType: INPUT_TYPES.CUSTOM;
+    })
+  | (CustomInputType & {
+      inputType: INPUT_TYPES.SELECT;
     });

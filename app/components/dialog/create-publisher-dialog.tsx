@@ -4,7 +4,6 @@ import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
-import { toast } from "sonner";
 import { z } from "zod";
 
 import { fetcher } from "@/api/axios";
@@ -26,6 +25,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { API_URL } from "@/constants/apiUrls";
+import { QUERY_KEYS } from "@/constants/keys";
 import { countryOptions } from "@/lib/country-options";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
@@ -39,31 +39,20 @@ const schema = z.object({
 
 type FormValues = z.infer<typeof schema>;
 
-export default function CreatePublisherModal() {
+export function CreatePublisherDialog() {
   const [open, setOpen] = useState(false);
   const queryClient = useQueryClient();
 
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      title: "",
-      country: "",
-      founding_date: "",
-      website_url: "",
-      image_url: "",
-    },
   });
 
   const mutation = useMutation({
     mutationFn: (data: FormValues) => fetcher.post(`${API_URL.publisher.publishers}`, data),
     onSuccess: () => {
-      toast.success("Publisher created!");
       setOpen(false);
       form.reset();
-      queryClient.invalidateQueries({ queryKey: ["publishers"] });
-    },
-    onError: () => {
-      toast.error("Failed to create publisher.");
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.publishers] });
     },
   });
 

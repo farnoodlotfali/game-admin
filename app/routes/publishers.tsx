@@ -1,15 +1,13 @@
 import { Suspense } from "react";
+import type { Route } from "./+types/publishers";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createLoader } from "nuqs";
 
-import CreatePublisherModal from "@/components/publishers/CreatePublisherModal";
-import PublisherFilter from "@/components/publishers/PublisherFilter";
-import PublisherTable from "@/components/publishers/PublisherTable";
+import { CreatePublisherDialog } from "@/components/dialog/create-publisher-dialog";
+import PublisherFilter from "@/components/pages/publishers/publisher-filter";
+import PublisherTable from "@/components/pages/publishers/publisher-table";
 import { TableSkeleton } from "@/components/table-skeleton";
-import {
-  publisherQueryOptions,
-  publisherSearchParams,
-} from "@/hooks/queries/publisher/usePublishers";
+import { publisherQueryOptions, publisherSearchParams } from "@/hooks/queries";
 import { clientQueryClient, serverQueryClient } from "@/lib/queryClient";
 
 export function meta() {
@@ -25,7 +23,7 @@ export function meta() {
 
 //ssr
 const loadSearchParams = createLoader(publisherSearchParams);
-export async function loader({ request }: any) {
+export async function loader({ request }: Route.LoaderArgs) {
   const queryClient = serverQueryClient();
   const filters = loadSearchParams(request);
 
@@ -38,7 +36,7 @@ export async function loader({ request }: any) {
 }
 
 //csr
-export function clientLoader({ request }: any) {
+export function clientLoader({ request }: Route.LoaderArgs) {
   const filters = createLoader(publisherSearchParams)(request);
 
   clientQueryClient.prefetchQuery(publisherQueryOptions({ filters }));
@@ -49,12 +47,12 @@ export function clientLoader({ request }: any) {
   };
 }
 
-const PublisherPage = ({ loaderData }: any) => {
+const PublishersPage = ({ loaderData }: Route.ComponentProps) => {
   return (
     <HydrationBoundary state={loaderData.dehydratedState}>
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold">Publishers</h1>
-        <CreatePublisherModal />
+        <CreatePublisherDialog />
       </div>
       <div>
         <PublisherFilter />
@@ -66,4 +64,4 @@ const PublisherPage = ({ loaderData }: any) => {
   );
 };
 
-export default PublisherPage;
+export default PublishersPage;

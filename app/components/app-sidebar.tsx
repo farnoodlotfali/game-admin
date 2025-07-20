@@ -1,5 +1,4 @@
-"use client";
-
+import { Link } from "react-router";
 import { ChevronUp, User2 } from "lucide-react";
 
 import {
@@ -18,7 +17,7 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import { SIDEBAR_ITEMS } from "@/constants";
+import { SIDEBAR_ITEMS } from "@/constants/sidebar-items";
 
 export function AppSidebar() {
   return (
@@ -30,10 +29,10 @@ export function AppSidebar() {
               {SIDEBAR_ITEMS.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
-                    <a href={item.url}>
+                    <Link to={item.url}>
                       <item.icon />
                       <span>{item.title}</span>
-                    </a>
+                    </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}

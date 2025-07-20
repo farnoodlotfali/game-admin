@@ -1,4 +1,6 @@
-import { Home, Component, Server, Layers, Database } from "lucide-react";
+import { Component, Database, Home, Layers, Server } from "lucide-react";
+
+import { PAGE_URL } from "./page-url";
 
 export const SIDEBAR_ITEMS = [
   {
@@ -8,7 +10,7 @@ export const SIDEBAR_ITEMS = [
   },
   {
     title: "Publishers",
-    url: "/publisher",
+    url: PAGE_URL.publishers,
     icon: Component,
   },
   {

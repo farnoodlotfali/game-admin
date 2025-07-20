@@ -2,10 +2,7 @@ import { useQueryStates } from "nuqs";
 
 import { Table } from "@/components/table";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
-import {
-  publisherSearchParams,
-  useSuspensePublishers,
-} from "@/hooks/queries/publisher/usePublishers";
+import { publisherSearchParams, useSuspensePublishers } from "@/hooks/queries";
 
 const head_tables = [
   { label: "ID", name: "id", sortable: true },
