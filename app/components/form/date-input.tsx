@@ -1,6 +1,6 @@
 import { format } from "date-fns";
 import { CalendarIcon } from "lucide-react";
-import type { UseFormReturn } from "react-hook-form";
+import type { Control } from "react-hook-form";
 
 import { cn } from "@/lib/utils";
 import type { DateInputType } from "@/types/form-inputs-type";
@@ -18,7 +18,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 
 type DateInputProps = {
   input: DateInputType;
-  control: UseFormReturn<any>["control"];
+  control: Control<any>;
 };
 export const DateInput = ({ control, input }: DateInputProps) => {
   return (

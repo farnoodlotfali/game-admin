@@ -22,11 +22,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useInfiniteGenres } from "@/hooks/queries";
-import type { IGenre } from "@/types/schema/genre";
+import { useInfinitePublishers } from "@/hooks/queries";
+import type { IPublisher } from "@/types/schema/publisher";
 
 type FormSchema = {
-  [key: string]: IGenre[];
+  [key: string]: IPublisher[];
 };
 
 type Props = {
@@ -36,18 +36,18 @@ type Props = {
   label?: string;
 };
 
-export const MultiGenresChooser = ({ name, control, desc, label }: Props) => {
+export const MultiPublishersChooser = ({ name, control, desc, label }: Props) => {
   const [open, setOpen] = useState(false);
   const { ref, inView } = useInView();
 
   const {
-    data: allGenres,
+    data: allPublishers,
     isLoading,
     isFetching,
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
-  } = useInfiniteGenres({
+  } = useInfinitePublishers({
     options: {
       enabled: open,
     },
@@ -78,7 +78,7 @@ export const MultiGenresChooser = ({ name, control, desc, label }: Props) => {
                 <Input
                   readOnly
                   {...field}
-                  value={fields.map((f) => f.name).join(", ")}
+                  value={fields.map((f) => f.title).join(", ")}
                   className="cursor-pointer"
                 />
               </DialogTrigger>
@@ -91,33 +91,33 @@ export const MultiGenresChooser = ({ name, control, desc, label }: Props) => {
 
       <DialogContent className="w-full max-w-[calc(100%-2rem)] px-0 md:max-w-5xl">
         <DialogHeader className="px-6">
-          <DialogTitle>Choose Genre(s)</DialogTitle>
-          <DialogDescription>Game Genre</DialogDescription>
+          <DialogTitle>Choose Publisher(s)</DialogTitle>
+          <DialogDescription>Game Publisher</DialogDescription>
         </DialogHeader>
         <div className="grid h-full max-h-80 flex-1 grid-cols-1 gap-4 overflow-y-auto px-6 py-4 md:grid-cols-3">
-          {allGenres?.pages[0].data.items.length
-            ? allGenres?.pages.map((page) =>
-                page?.data.items.map((genre) => {
-                  const index = fields.findIndex((item) => item.id === genre.id);
+          {allPublishers?.pages[0].data.items.length
+            ? allPublishers?.pages.map((page) =>
+                page?.data.items.map((publisher) => {
+                  const index = fields.findIndex((item) => item.id === publisher.id);
                   const isSelected = index !== -1;
                   return (
                     <Button
-                      key={genre.id}
+                      key={publisher.id}
                       variant={isSelected ? "default" : "outline"}
                       onClick={() => {
                         if (isSelected) {
                           remove(index);
                         } else {
-                          append(genre);
+                          append(publisher);
                         }
                       }}
                     >
-                      {genre.name}
+                      {publisher.title}
                     </Button>
                   );
                 })
               )
-            : "No Genre"}
+            : "No Publisher"}
 
           <div className="grid-cols-1 md:grid-cols-1">
             {isFetchingNextPage || isLoading || isFetching ? (
@@ -127,6 +127,7 @@ export const MultiGenresChooser = ({ name, control, desc, label }: Props) => {
             )}
           </div>
         </div>
+
         <DialogFooter className="px-6">
           <DialogClose asChild>
             <Button type="button" variant="secondary">

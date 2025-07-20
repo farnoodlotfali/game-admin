@@ -6,9 +6,9 @@ import { createLoader } from "nuqs";
 import { CreatePublisherDialog } from "@/components/dialog/create-publisher-dialog";
 import PublisherFilter from "@/components/pages/publishers/publisher-filter";
 import PublisherTable from "@/components/pages/publishers/publisher-table";
-import { TableSkeleton } from "@/components/table-skeleton";
-import { publisherQueryOptions, publisherSearchParams } from "@/hooks/queries";
-import { clientQueryClient, serverQueryClient } from "@/lib/queryClient";
+import { TableSkeleton } from "@/components/table/table-skeleton";
+import { publisherSearchParams, publishersQueryOptions } from "@/hooks/queries";
+import { getQueryClient } from "@/query-client";
 
 export function meta() {
   return [
@@ -24,10 +24,11 @@ export function meta() {
 //ssr
 const loadSearchParams = createLoader(publisherSearchParams);
 export async function loader({ request }: Route.LoaderArgs) {
-  const queryClient = serverQueryClient();
+  const queryClient = getQueryClient();
+
   const filters = loadSearchParams(request);
 
-  await queryClient.prefetchQuery(publisherQueryOptions({ filters }));
+  await queryClient.prefetchQuery(publishersQueryOptions({ filters }));
 
   return {
     dehydratedState: dehydrate(queryClient),
@@ -37,12 +38,13 @@ export async function loader({ request }: Route.LoaderArgs) {
 
 //csr
 export function clientLoader({ request }: Route.LoaderArgs) {
+  const queryClient = getQueryClient();
   const filters = createLoader(publisherSearchParams)(request);
 
-  clientQueryClient.prefetchQuery(publisherQueryOptions({ filters }));
+  queryClient.prefetchQuery(publishersQueryOptions({ filters }));
 
   return {
-    dehydratedState: dehydrate(clientQueryClient),
+    dehydratedState: dehydrate(queryClient),
     limit: filters.limit,
   };
 }

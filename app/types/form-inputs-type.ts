@@ -8,7 +8,7 @@ type GlobalInputType = {
   desc?: string;
   label?: string;
   gridClassName?: string;
-  // control: UseFormReturn<any>["control"];
+  //   control: Control<any>;
 };
 
 export type TextInputType = {
@@ -26,7 +26,8 @@ export type DateInputType = {
 
 export type CustomInputType = {
   customView: any;
-} & GlobalInputType;
+  gridClassName?: string;
+};
 
 export type FormInputsType =
   | (TextInputType & {

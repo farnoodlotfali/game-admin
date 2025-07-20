@@ -1,9 +1,4 @@
-import type {
-  InfiniteData,
-  QueryKey,
-  UseInfiniteQueryOptions,
-  UseQueryOptions,
-} from "@tanstack/react-query";
+import type { QueryKey, UseInfiniteQueryOptions, UseQueryOptions } from "@tanstack/react-query";
 
 export interface PaginationType<T> {
   items: T;

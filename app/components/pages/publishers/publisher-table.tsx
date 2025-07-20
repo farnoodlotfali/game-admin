@@ -1,6 +1,6 @@
 import { useQueryStates } from "nuqs";
 
-import { Table } from "@/components/table";
+import { Table } from "@/components/table/table";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { publisherSearchParams, useSuspensePublishers } from "@/hooks/queries";
 

@@ -5,15 +5,15 @@ import {
   useQuery,
   useSuspenseQuery,
 } from "@tanstack/react-query";
+import { createSerializer, parseAsString } from "nuqs";
 
 import { fetcher } from "@/api/axios";
-import { API_URL } from "@/constants/apiUrls";
+import { API_URL } from "@/constants/api-url";
 import { QUERY_KEYS } from "@/constants/keys";
 import { renderQueryKey } from "@/lib/renderQueryKey";
 import type { HookApiInfiniteOptions, HookApiOptions, ResponsePaginationType } from "@/types";
 import type { GenresResponse } from "@/types/genre-response";
 import type { SearchParam } from "@/types/search-param";
-import { filteringMethod } from "../../../lib/filteringMethod";
 
 type GenreFilters = {
   page?: SearchParam;
@@ -23,13 +23,23 @@ type GenreFilters = {
   sort?: SearchParam;
 };
 
+export const publisherSearchParams = {
+  page: parseAsString.withDefault(""),
+  limit: parseAsString.withDefault(""),
+  order: parseAsString.withDefault(""),
+  sort: parseAsString.withDefault(""),
+  q: parseAsString.withDefault(""),
+};
+
+const serialize = createSerializer(publisherSearchParams);
+
 type Parameters = { options?: HookApiOptions; filters?: GenreFilters };
 type ParametersI = { options?: HookApiInfiniteOptions; filters?: GenreFilters };
 type GenreReturn = ResponsePaginationType<GenresResponse>;
 
 // queryOptions
-export const genreQueryOptions = ({ filters, options }: Parameters) => {
-  const queryParams = filteringMethod(filters);
+export const genreQueryOptions = ({ filters = {}, options }: Parameters) => {
+  const queryParams = serialize(filters);
 
   return queryOptions({
     queryKey: renderQueryKey([QUERY_KEYS.genres, filters]),
@@ -44,7 +54,8 @@ export const genreInfiniteQueryOptions = ({ filters, options }: ParametersI) => 
   return infiniteQueryOptions({
     queryKey: renderQueryKey([QUERY_KEYS.genres, filters, { infinite: true }]),
     queryFn: ({ pageParam }) => {
-      const queryParams = filteringMethod({ ...filters, page: pageParam });
+      const queryParams = serialize({ ...filters, page: pageParam as GenreFilters["page"] });
+
       return fetcher.get<GenreReturn>(`${API_URL.genre.genres}${queryParams}`);
     },
     initialPageParam: filters?.page ?? 1,

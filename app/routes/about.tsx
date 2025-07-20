@@ -11,12 +11,11 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useGames } from "@/hooks/queries";
-import { gameQueryOptions } from "@/hooks/queries";
-import { clientQueryClient, serverQueryClient } from "@/lib/queryClient";
+import { gameQueryOptions, useGames } from "@/hooks/queries";
+import { getQueryClient } from "@/query-client";
 
 export async function loader() {
-  const queryClient = serverQueryClient();
+  const queryClient = getQueryClient();
 
   await queryClient.prefetchQuery(gameQueryOptions({}));
   return {
@@ -24,10 +23,11 @@ export async function loader() {
   };
 }
 export async function clientLoader() {
-  await clientQueryClient.prefetchQuery(gameQueryOptions({}));
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery(gameQueryOptions({}));
 
   return {
-    dehydratedState: dehydrate(clientQueryClient),
+    dehydratedState: dehydrate(queryClient),
   };
 }
 
@@ -97,5 +97,4 @@ function About1() {
       </Table>
     </div>
   );
-
 }

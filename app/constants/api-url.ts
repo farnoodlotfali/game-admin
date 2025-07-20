@@ -5,6 +5,9 @@ export const API_URL = {
   genre: {
     genres: "/genres",
   },
+  platform: {
+    platforms: "/platforms",
+  },
   publisher: {
     publishers: "/publishers",
   },

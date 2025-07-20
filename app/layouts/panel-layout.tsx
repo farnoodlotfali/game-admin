@@ -40,7 +40,7 @@ export default function PanelLayout({ loaderData }: any) {
   return (
     <SidebarProvider defaultOpen={loaderData?.sidebar_state}>
       <AppSidebar />
-      <div className="w-full">
+      <div className="w-full overflow-hidden">
         <Header />
         <main className="flex-1 overflow-auto p-3">
           <Outlet />

@@ -1,4 +1,4 @@
-import type { UseFormReturn } from "react-hook-form";
+import type { Control } from "react-hook-form";
 
 import type { TextInputType } from "@/types/form-inputs-type";
 import {
@@ -13,7 +13,7 @@ import { Input } from "../ui/input";
 
 type TextInputProps = {
   input: TextInputType;
-  control: UseFormReturn<any>["control"];
+  control: Control<any>;
 };
 
 export const TextInput = ({ input, control }: TextInputProps) => {
