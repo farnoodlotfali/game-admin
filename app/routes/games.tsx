@@ -47,7 +47,7 @@ export function clientLoader({ request }: Route.LoaderArgs) {
   };
 }
 
-const Game = ({ loaderData }: Route.ComponentProps) => {
+const Games = ({ loaderData }: Route.ComponentProps) => {
   return (
     <HydrationBoundary state={loaderData.dehydratedState}>
       <div>
@@ -60,4 +60,4 @@ const Game = ({ loaderData }: Route.ComponentProps) => {
   );
 };
 
-export default Game;
+export default Games;

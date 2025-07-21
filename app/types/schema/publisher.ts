@@ -6,7 +6,7 @@ export interface IPublisher {
   country: string;
   founding_date: string;
   website_url: string;
-  image_url?: string;
+  image?: string;
 }
 export const publisherSchema = z.object({
   id: z.number(),
