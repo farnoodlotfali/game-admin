@@ -25,7 +25,7 @@ export const DateInput = ({ control, input }: DateInputProps) => {
     <FormField
       control={control}
       name={input.name}
-      render={({ field }) => (
+      render={({ field, fieldState: { error } }) => (
         <FormItem className="flex flex-col">
           {input?.label && <FormLabel>{input?.label}</FormLabel>}
 
@@ -36,7 +36,8 @@ export const DateInput = ({ control, input }: DateInputProps) => {
                   variant={"outline"}
                   className={cn(
                     "w-full pl-3 text-left font-normal",
-                    !field.value && "text-muted-foreground"
+                    !field.value && "text-muted-foreground",
+                    !!error && "!border-destructive !border"
                   )}
                 >
                   {field.value ? format(field.value, "PPP") : <span>Pick a date</span>}

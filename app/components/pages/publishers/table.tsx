@@ -1,19 +1,22 @@
 import { useQueryStates } from "nuqs";
 
+import noImg from "@/assets/img/no-img.jpeg";
 import { Table } from "@/components/table/table";
+import { Button } from "@/components/ui/button";
 import { TableBody, TableCell, TableRow } from "@/components/ui/table";
 import { publisherSearchParams, useSuspensePublishers } from "@/hooks/queries";
+import { handleDate } from "@/lib/handle-date";
 
 const head_tables = [
   { label: "ID", name: "id", sortable: true },
   { label: "Title", name: "title", sortable: true },
   { label: "Country", name: "country", sortable: true },
-  { label: "Founding Date" },
+  { label: "Founding Date", name: "founding_date", sortable: true },
   { label: "Website" },
   { label: "Image" },
 ];
 
-const PublisherTable = () => {
+export const PublisherTable = () => {
   const [filters, setFilters] = useQueryStates(publisherSearchParams, {
     history: "replace",
   });
@@ -33,21 +36,23 @@ const PublisherTable = () => {
             <TableCell>{publisher.id}</TableCell>
             <TableCell>{publisher.title}</TableCell>
             <TableCell>{publisher.country}</TableCell>
-            <TableCell>{new Date(publisher.founding_date).toLocaleDateString()}</TableCell>
+            <TableCell>{handleDate(publisher.founding_date, "dd MMMM yyyy")}</TableCell>
             <TableCell>
-              <a
-                href={publisher.website_url}
-                target="_blank"
-                className="cursor-pointer text-indigo-400"
-              >
-                View
-              </a>
+              {publisher?.website_url ? (
+                <Button variant="link" asChild>
+                  <a href={publisher.website_url} target="_blank">
+                    View
+                  </a>
+                </Button>
+              ) : (
+                "-"
+              )}
             </TableCell>
             <TableCell>
               <img
-                src={publisher.image_url}
+                src={publisher?.image ? publisher.image : noImg}
                 alt={publisher.title}
-                className="h-12 w-12 rounded-full object-cover"
+                className="size-10 rounded-full object-cover md:size-14"
               />
             </TableCell>
           </TableRow>

@@ -1,10 +1,10 @@
 import { Suspense } from "react";
-import type { Route } from "./+types/game";
+import type { Route } from "./+types/games";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createLoader } from "nuqs";
 
-import { GameTable } from "@/components/pages/games/table";
 import { GameFilterBox } from "@/components/pages/games/filter-box";
+import { GamesTable } from "@/components/pages/games/table";
 import { TableSkeleton } from "@/components/table/table-skeleton";
 import { gameQueryOptions, gameSearchParams } from "@/hooks/queries";
 import { getQueryClient } from "@/query-client";
@@ -53,7 +53,7 @@ const Games = ({ loaderData }: Route.ComponentProps) => {
       <div>
         <GameFilterBox />
         <Suspense fallback={<TableSkeleton rows={Number(loaderData.limit) || 10} />}>
-          <GameTable />
+          <GamesTable />
         </Suspense>
       </div>
     </HydrationBoundary>

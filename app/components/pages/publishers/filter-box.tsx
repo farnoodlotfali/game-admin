@@ -13,11 +13,11 @@ import { publisherSearchParams } from "@/hooks/queries";
 import type { FormInputsType } from "@/types/form-inputs-type";
 
 const formSchema = z.object({
-  title: z.string().optional(),
+  q: z.string().optional(),
   country: z.string().optional(),
 });
 
-const PublisherFilter = () => {
+export const PublisherFilter = () => {
   const [filters, setFilters] = useQueryStates(publisherSearchParams, {
     history: "push",
   });
@@ -35,7 +35,7 @@ const PublisherFilter = () => {
     {
       inputType: INPUT_TYPES.TEXT,
       label: "Publisher Name",
-      name: "title",
+      name: "q",
       gridClassName: " md:col-span-3",
       props: {
         placeholder: "Search by title",
@@ -72,5 +72,3 @@ const PublisherFilter = () => {
     </Collapsible>
   );
 };
-
-export default PublisherFilter;

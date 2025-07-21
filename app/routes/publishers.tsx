@@ -4,8 +4,8 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createLoader } from "nuqs";
 
 import { CreatePublisherDialog } from "@/components/dialog/create-publisher-dialog";
-import PublisherFilter from "@/components/pages/publishers/publisher-filter";
-import PublisherTable from "@/components/pages/publishers/publisher-table";
+import { PublisherFilter } from "@/components/pages/publishers/filter-box";
+import { PublisherTable } from "@/components/pages/publishers/table";
 import { TableSkeleton } from "@/components/table/table-skeleton";
 import { publisherSearchParams, publishersQueryOptions } from "@/hooks/queries";
 import { getQueryClient } from "@/query-client";
@@ -21,8 +21,9 @@ export function meta() {
   ];
 }
 
-//ssr
 const loadSearchParams = createLoader(publisherSearchParams);
+
+//ssr
 export async function loader({ request }: Route.LoaderArgs) {
   const queryClient = getQueryClient();
 
@@ -39,7 +40,7 @@ export async function loader({ request }: Route.LoaderArgs) {
 //csr
 export function clientLoader({ request }: Route.LoaderArgs) {
   const queryClient = getQueryClient();
-  const filters = createLoader(publisherSearchParams)(request);
+  const filters = loadSearchParams(request);
 
   queryClient.prefetchQuery(publishersQueryOptions({ filters }));
 
@@ -52,8 +53,7 @@ export function clientLoader({ request }: Route.LoaderArgs) {
 const PublishersPage = ({ loaderData }: Route.ComponentProps) => {
   return (
     <HydrationBoundary state={loaderData.dehydratedState}>
-      <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold">Publishers</h1>
+      <div className="mb-4">
         <CreatePublisherDialog />
       </div>
       <div>

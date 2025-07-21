@@ -1,12 +1,9 @@
-"use client";
-
 import { useState } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { fetcher } from "@/api/axios";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -15,26 +12,21 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
-import { API_URL } from "@/constants/apiUrls";
+import { Form } from "@/components/ui/form";
+import { COUNTRIES } from "@/constants/countries";
+import { INPUT_TYPES } from "@/constants/input-types";
 import { QUERY_KEYS } from "@/constants/keys";
-import { countryOptions } from "@/lib/country-options";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
+import { useCreatePublisher } from "@/hooks/mutations";
+import type { FormInputsType } from "@/types/form-inputs-type";
+import { FormInputs } from "../form";
+import { LoadingButton } from "../loading-button";
 
 const schema = z.object({
   title: z.string().min(2),
   country: z.string().min(2),
-  founding_date: z.string().nonempty("Founding date is required"),
-  website_url: z.string().url(),
-  image_url: z.string().url().optional(),
+  founding_date: z.date(),
+  website_url: z.string().url().nullish(),
+  image: z.instanceof(Object).nullish(),
 });
 
 type FormValues = z.infer<typeof schema>;
@@ -47,17 +39,58 @@ export function CreatePublisherDialog() {
     resolver: zodResolver(schema),
   });
 
-  const mutation = useMutation({
-    mutationFn: (data: FormValues) => fetcher.post(`${API_URL.publisher.publishers}`, data),
-    onSuccess: () => {
-      setOpen(false);
-      form.reset();
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.publishers] });
+  const createPublisherMutation = useCreatePublisher();
+
+  const inputs: FormInputsType[] = [
+    {
+      inputType: INPUT_TYPES.TEXT,
+      label: "Title",
+      name: "title",
+      props: {
+        placeholder: "Publisher Title",
+      },
     },
-  });
+    {
+      inputType: INPUT_TYPES.SELECT,
+      label: "Country",
+      name: "country",
+      options: COUNTRIES,
+    },
+    {
+      inputType: INPUT_TYPES.DATE,
+      label: "Founding Date",
+      name: "founding_date",
+    },
+    {
+      inputType: INPUT_TYPES.TEXT,
+      label: "Website URL",
+      name: "website_url",
+      props: {
+        type: "url",
+        placeholder: "https://example.com",
+      },
+    },
+    {
+      inputType: INPUT_TYPES.PHOTO,
+      label: "Image",
+      name: "image",
+    },
+  ];
 
   const onSubmit = (values: FormValues) => {
-    mutation.mutate(values);
+    createPublisherMutation.mutate(
+      {
+        ...values,
+        founding_date: values.founding_date.toISOString(),
+      },
+      {
+        onSuccess: () => {
+          setOpen(false);
+          form.reset();
+          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.publishers] });
+        },
+      }
+    );
   };
 
   return (
@@ -71,84 +104,12 @@ export function CreatePublisherDialog() {
         </DialogHeader>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormField
-              control={form.control}
-              name="title"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Title</FormLabel>
-                  <FormControl>
-                    <Input {...field} placeholder="e.g. Rockstar Games" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="country"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Country</FormLabel>
-                  <Select value={field.value} onValueChange={field.onChange}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select country" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {countryOptions.map((country) => (
-                        <SelectItem key={country.value} value={country.label}>
-                          {country.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="founding_date"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Founding Date</FormLabel>
-                  <FormControl>
-                    <Input type="date" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="website_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Website URL</FormLabel>
-                  <FormControl>
-                    <Input type="url" {...field} placeholder="https://example.com" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="image_url"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Image URL (optional)</FormLabel>
-                  <FormControl>
-                    <Input type="url" {...field} placeholder="https://example.com/image.jpg" />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            <FormInputs control={form.control} inputs={inputs} className="md:grid-cols-1" />
+
             <div className="flex justify-end pt-2">
-              <Button type="submit" disabled={mutation.isPending}>
-                {mutation.isPending ? "Creating..." : "Create Publisher"}
-              </Button>
+              <LoadingButton type="submit" loading={createPublisherMutation.isPending}>
+                Create
+              </LoadingButton>
             </div>
           </form>
         </Form>

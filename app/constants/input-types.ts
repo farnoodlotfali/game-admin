@@ -7,4 +7,5 @@ export enum INPUT_TYPES {
   PASSWORD = "password",
   TEXTAREA = "textarea",
   DATE = "date",
+  PHOTO = "photo",
 }

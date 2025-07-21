@@ -36,7 +36,7 @@ const head_tables = [
   },
 ];
 
-export const GameTable = () => {
+export const GamesTable = () => {
   const [filters, setFilters] = useQueryStates(gameSearchParams, {
     history: "replace",
   });
