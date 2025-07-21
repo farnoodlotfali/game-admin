@@ -1,3 +1,4 @@
+import * as SelectPrimitive from "@radix-ui/react-select";
 import type { DayPicker } from "react-day-picker";
 
 import { Button } from "@/components/ui/button";
@@ -8,7 +9,7 @@ type GlobalInputType = {
   desc?: string;
   label?: string;
   gridClassName?: string;
-  // control: UseFormReturn<any>["control"];
+  //   control: Control<any>;
 };
 
 export type TextInputType = {
@@ -23,10 +24,21 @@ export type DateInputType = {
     buttonVariant?: React.ComponentProps<typeof Button>["variant"];
   };
 } & GlobalInputType;
+export type PhotoInputType = {
+  props?: Omit<React.ComponentProps<"input">, "type">;
+} & GlobalInputType;
+export type SelectInputType = {
+  props?: React.ComponentProps<typeof SelectPrimitive.Root>;
+  options: {
+    title: string;
+    value: string | number;
+  }[];
+} & GlobalInputType;
 
 export type CustomInputType = {
   customView: any;
-} & GlobalInputType;
+  gridClassName?: string;
+};
 
 export type FormInputsType =
   | (TextInputType & {
@@ -37,4 +49,10 @@ export type FormInputsType =
     })
   | (CustomInputType & {
       inputType: INPUT_TYPES.CUSTOM;
+    })
+  | (SelectInputType & {
+      inputType: INPUT_TYPES.SELECT;
+    })
+  | (PhotoInputType & {
+      inputType: INPUT_TYPES.PHOTO;
     });

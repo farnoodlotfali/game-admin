@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { useFieldArray, type UseFormReturn } from "react-hook-form";
+import { useFieldArray, type Control } from "react-hook-form";
 import { useInView } from "react-intersection-observer";
 
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
+  DialogClose,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -21,19 +23,20 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useInfiniteGenres } from "@/hooks/queries";
-import type { CustomInputType } from "@/types/form-inputs-type";
 import type { IGenre } from "@/types/schema/genre";
 
 type FormSchema = {
   [key: string]: IGenre[];
 };
 
-type MultiGenresChooserProps = {
-  input: Omit<CustomInputType, "customView">;
-  control: UseFormReturn<FormSchema>["control"];
+type Props = {
+  control: Control<any>;
+  name: string;
+  desc?: string;
+  label?: string;
 };
 
-export const MultiGenresChooser = ({ input, control }: MultiGenresChooserProps) => {
+export const MultiGenresChooser = ({ name, control, desc, label }: Props) => {
   const [open, setOpen] = useState(false);
   const { ref, inView } = useInView();
 
@@ -50,10 +53,9 @@ export const MultiGenresChooser = ({ input, control }: MultiGenresChooserProps) 
     },
   });
 
-  // 3. Correctly typed useFieldArray
   const { fields, append, remove } = useFieldArray<FormSchema, string, any>({
     control,
-    name: input.name,
+    name: name,
     keyName: "customId",
   });
 
@@ -67,10 +69,10 @@ export const MultiGenresChooser = ({ input, control }: MultiGenresChooserProps) 
     <Dialog open={open} onOpenChange={setOpen}>
       <FormField
         control={control}
-        name={input.name}
+        name={name}
         render={({ field }) => (
           <FormItem>
-            {input.label && <FormLabel>{input.label}</FormLabel>}
+            {label && <FormLabel>{label}</FormLabel>}
             <FormControl>
               <DialogTrigger asChild>
                 <Input
@@ -81,42 +83,57 @@ export const MultiGenresChooser = ({ input, control }: MultiGenresChooserProps) 
                 />
               </DialogTrigger>
             </FormControl>
-            {input.desc && <FormDescription>{input.desc}</FormDescription>}
+            {desc && <FormDescription>{desc}</FormDescription>}
             <FormMessage />
           </FormItem>
         )}
       />
 
-      <DialogContent className="w-full max-w-[calc(100%-2rem)] overflow-y-auto px-0 md:max-w-5xl">
+      <DialogContent className="w-full max-w-[calc(100%-2rem)] px-0 md:max-w-5xl">
         <DialogHeader className="px-6">
           <DialogTitle>Choose Genre(s)</DialogTitle>
           <DialogDescription>Game Genre</DialogDescription>
         </DialogHeader>
-        <div className="flex max-h-80 w-full flex-1 items-center gap-2 overflow-y-auto px-6 pt-4">
-          <div className="grid flex-1 grid-cols-1 gap-5 md:grid-cols-4">
-            {allGenres?.pages[0].data.items.length
-              ? allGenres?.pages.map((page) =>
-                  page?.data.items.map((genre) => {
-                    const index = fields.findIndex((item) => item.id === genre.id);
-                    const isSelected = index !== -1;
-                    return (
-                      <Button
-                        key={genre.id}
-                        variant={isSelected ? "default" : "outline"}
-                        onClick={() => {
-                          isSelected ? remove(index) : append(genre);
-                        }}
-                      >
-                        {genre.name}
-                      </Button>
-                    );
-                  })
-                )
-              : "No Genre"}
+        <div className="grid h-full max-h-80 flex-1 grid-cols-1 gap-4 overflow-y-auto px-6 py-4 md:grid-cols-3">
+          {allGenres?.pages[0].data.items.length
+            ? allGenres?.pages.map((page) =>
+                page?.data.items.map((genre) => {
+                  const index = fields.findIndex((item) => item.id === genre.id);
+                  const isSelected = index !== -1;
+                  return (
+                    <Button
+                      key={genre.id}
+                      variant={isSelected ? "default" : "outline"}
+                      onClick={() => {
+                        if (isSelected) {
+                          remove(index);
+                        } else {
+                          append(genre);
+                        }
+                      }}
+                    >
+                      {genre.name}
+                    </Button>
+                  );
+                })
+              )
+            : "No Genre"}
+
+          <div className="grid-cols-1 md:grid-cols-1">
+            {isFetchingNextPage || isLoading || isFetching ? (
+              <div className="mt-5 text-center">Loading...</div>
+            ) : (
+              <div ref={ref} />
+            )}
           </div>
         </div>
-
-        {isFetchingNextPage || isLoading || isFetching ? "Loading..." : <div ref={ref} />}
+        <DialogFooter className="px-6">
+          <DialogClose asChild>
+            <Button type="button" variant="secondary">
+              Close
+            </Button>
+          </DialogClose>
+        </DialogFooter>
       </DialogContent>
     </Dialog>
   );

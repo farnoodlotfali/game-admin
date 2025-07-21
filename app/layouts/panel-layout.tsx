@@ -5,7 +5,7 @@ import { ModeToggle } from "@/components/mode-toggle";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 import { SIDEBAR_COOKIE_NAME, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { PAGE_TITLE_URL } from "@/constants/page-url-title";
+import { PAGE_NAME } from "@/constants/page-name";
 import type { Route } from "../+types/root";
 
 export const loader = async ({ request }: Route.LoaderArgs) => {
@@ -26,7 +26,7 @@ const Header = () => {
       <ModeToggle />
       <Separator orientation="vertical" className="mx-3" />
 
-      <h5>{PAGE_TITLE_URL[pathname]}</h5>
+      <h1 className="text-base font-bold">{PAGE_NAME[pathname]}</h1>
 
       <Avatar className="ml-auto">
         <AvatarImage src="https://github.com/shadcn.png" />
@@ -40,7 +40,7 @@ export default function PanelLayout({ loaderData }: any) {
   return (
     <SidebarProvider defaultOpen={loaderData?.sidebar_state}>
       <AppSidebar />
-      <div className="w-full">
+      <div className="w-full overflow-hidden">
         <Header />
         <main className="flex-1 overflow-auto p-3">
           <Outlet />

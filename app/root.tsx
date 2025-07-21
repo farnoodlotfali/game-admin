@@ -14,7 +14,7 @@ import { NuqsAdapter } from "nuqs/adapters/react-router/v7";
 
 import { ThemeProvider, type Theme } from "./components/theme-provider";
 import { Toaster } from "./components/ui/sonner";
-import { clientQueryClient } from "./lib/queryClient";
+import { getQueryClient } from "./query-client";
 
 import "./app.css";
 
@@ -36,6 +36,8 @@ export const links: Route.LinksFunction = () => [
 const defaultTheme: Theme = "dark";
 
 export function Layout({ children }: { children: React.ReactNode }) {
+  const queryClient = getQueryClient();
+
   return (
     <html lang="en" className={defaultTheme}>
       <head>
@@ -45,7 +47,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
         <Links />
       </head>
       <body className="font-sans">
-        <QueryClientProvider client={clientQueryClient}>
+        <QueryClientProvider client={queryClient}>
           <NuqsAdapter>
             <ThemeProvider defaultTheme={defaultTheme} storageKey="vite-ui-theme">
               {children}

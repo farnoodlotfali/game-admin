@@ -1,1 +1,1 @@
-export type SearchParam = string | null;
+export type SearchParam<T = string> = T | null;

@@ -1,9 +1,6 @@
 import type { PropsWithChildren } from "react";
 import { ArrowDownNarrowWide, ArrowUpNarrowWide, ListFilter } from "lucide-react";
 
-import { PaginationControl } from "./pagination-control";
-import { Button } from "./ui/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "./ui/select";
 import {
   Table as ShadCnTable,
   TableCaption,
@@ -12,6 +9,9 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import type { PaginationType } from "@/types";
+import { PaginationControl } from "../pagination-control";
+import { Button } from "../ui/button";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "../ui/select";
 
 type TableProps = {
   heads: {
@@ -88,7 +88,7 @@ export const Table: React.FC<PropsWithChildren<TableProps>> = ({
         {children}
       </ShadCnTable>
 
-      <div className="flex flex-col gap-3 items-center md:flex-row mt-3">
+      <div className="mt-3 flex flex-col items-center gap-3 md:flex-row">
         <div className="flex items-center gap-1">
           <span className="text-[6px]">Per Page</span>
           <Select value={filters?.limit || "10"} onValueChange={(e) => handlePerPage(e)}>

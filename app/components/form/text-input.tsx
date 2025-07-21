@@ -1,4 +1,4 @@
-import type { UseFormReturn } from "react-hook-form";
+import type { Control } from "react-hook-form";
 
 import type { TextInputType } from "@/types/form-inputs-type";
 import {
@@ -13,7 +13,7 @@ import { Input } from "../ui/input";
 
 type TextInputProps = {
   input: TextInputType;
-  control: UseFormReturn<any>["control"];
+  control: Control<any>;
 };
 
 export const TextInput = ({ input, control }: TextInputProps) => {
@@ -21,12 +21,22 @@ export const TextInput = ({ input, control }: TextInputProps) => {
     <FormField
       control={control}
       name={input.name}
-      render={({ field }) => (
+      render={({ field: { onChange, value, ...rest } }) => (
         <FormItem>
           {input?.label && <FormLabel>{input?.label}</FormLabel>}
 
           <FormControl>
-            <Input {...input.props} {...field} />
+            <Input
+              {...input.props}
+              {...rest}
+              onChange={(e) => {
+                onChange(e);
+                if (input.props?.onChange) {
+                  input.props?.onChange(e);
+                }
+              }}
+              value={value ?? ""}
+            />
           </FormControl>
           {input?.desc && <FormDescription>{input?.desc}</FormDescription>}
 

@@ -7,6 +7,11 @@ import { USER_TOKEN } from "@/constants/cookies";
 
 // import { PAGE_URL } from "@/constants/PageUrl";
 
+type ApiConfigsType = {
+  token?: string | null | undefined;
+  showToast?: boolean;
+} & AxiosRequestConfig<any>;
+
 export const AxiosInstance = axios.create({
   baseURL: import.meta.env.VITE_API_BASE_URL,
   timeout: 20000,
@@ -15,17 +20,26 @@ export const AxiosInstance = axios.create({
   },
 });
 
-const responseBody = <T>(response: AxiosResponse<T>) => response.data;
+const responseBody = <T>(response: AxiosResponse<T>, showToast?: boolean) => {
+  if (showToast) {
+    const msg: any = response.data;
+
+    toast.success(msg.message);
+  }
+
+  return response.data;
+};
 
 const onError = (
   error: Error & {
-    response: { data: { errors: any; message: string }; status: number };
+    response: { data: { errors: any; message: string; err?: string }; status: number };
   }
 ) => {
   const e = error;
   const msg = e.response.data.message;
+  const errMsg = e.response.data.err ?? "";
 
-  toast.error(msg ?? "Error!");
+  toast.error(msg ? `${msg} errMsg: ${errMsg}` : "Error!");
   if (e.response.status === 401) {
     // window.location.href = PAGE_URL.auth.login;
     Cookies.remove(USER_TOKEN);
@@ -36,65 +50,68 @@ const onError = (
 
 // without token (for auth)
 const normalFetcher = {
-  get: <T>(url: string, configs?: AxiosRequestConfig<any> | undefined) =>
+  get: <T>(url: string, configs?: ApiConfigsType | undefined) =>
     AxiosInstance.get<T>(url, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e)),
-  post: <T>(url: string, body: object, configs?: AxiosRequestConfig<any> | undefined) => {
+  post: <T>(url: string, body: object, configs?: ApiConfigsType | undefined) => {
     return AxiosInstance.post<T>(url, body, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e));
   },
-  put: <T>(url: string, body: object, configs?: AxiosRequestConfig<any> | undefined) =>
+  put: <T>(url: string, body: object, configs?: ApiConfigsType | undefined) =>
     AxiosInstance.put<T>(url, body, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e)),
-  patch: <T>(url: string, body: object, configs?: AxiosRequestConfig<any> | undefined) =>
+  patch: <T>(url: string, body: object, configs?: ApiConfigsType | undefined) =>
     AxiosInstance.patch<T>(url, body, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e)),
-  delete: <T>(url: string, configs?: AxiosRequestConfig<any> | undefined) =>
+  delete: <T>(url: string, configs?: ApiConfigsType | undefined) =>
     AxiosInstance.delete<T>(url, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e)),
 };
 
-const AuthorizationConfig = () => {
-  const token = Cookies.get(USER_TOKEN);
-  AxiosInstance.defaults.headers.Authorization = `Bearer ${token}`;
+const AuthorizationConfig = (token?: string | null | undefined) => {
+  if (token) {
+    AxiosInstance.defaults.headers.Authorization = `${token}`;
+  } else {
+    const client_token = Cookies.get(USER_TOKEN);
+    AxiosInstance.defaults.headers.Authorization = `${client_token}`;
+  }
 };
-
 // with token
 const fetcher = {
-  get: <T>(url: string, configs?: AxiosRequestConfig<any> | undefined) => {
-    AuthorizationConfig();
+  get: <T>(url: string, configs?: ApiConfigsType | undefined) => {
+    AuthorizationConfig(configs?.token);
     return AxiosInstance.get<T>(url, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e));
   },
-  post: <T>(url: string, body: object, configs?: AxiosRequestConfig<any> | undefined) => {
-    AuthorizationConfig();
+  post: <T>(url: string, body: object, configs?: ApiConfigsType | undefined) => {
+    AuthorizationConfig(configs?.token);
     return AxiosInstance.post<T>(url, body, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e));
   },
-  put: <T>(url: string, body: object, configs?: AxiosRequestConfig<any> | undefined) => {
-    AuthorizationConfig();
+  put: <T>(url: string, body: object, configs?: ApiConfigsType | undefined) => {
+    AuthorizationConfig(configs?.token);
     return AxiosInstance.put<T>(url, body, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e));
   },
-  patch: <T>(url: string, body: object, configs?: AxiosRequestConfig<any> | undefined) => {
-    AuthorizationConfig();
+  patch: <T>(url: string, body: object, configs?: ApiConfigsType | undefined) => {
+    AuthorizationConfig(configs?.token);
 
     return AxiosInstance.patch<T>(url, body, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e));
   },
-  delete: <T>(url: string, configs?: AxiosRequestConfig<any> | undefined) => {
-    AuthorizationConfig();
+  delete: <T>(url: string, configs?: ApiConfigsType | undefined) => {
+    AuthorizationConfig(configs?.token);
     return AxiosInstance.delete<T>(url, configs)
-      .then(responseBody)
+      .then((res) => responseBody(res, configs?.showToast))
       .catch((e) => onError(e));
   },
 };

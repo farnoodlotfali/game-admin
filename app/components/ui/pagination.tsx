@@ -1,8 +1,7 @@
 import * as React from "react";
-import { Link } from "react-router";
 import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react";
 
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
@@ -100,4 +99,3 @@ export {
   PaginationNext,
   PaginationEllipsis,
 };
-
