@@ -10,7 +10,7 @@ import { createSerializer, parseAsString } from "nuqs";
 import { fetcher } from "@/api/axios";
 import { API_URL } from "@/constants/api-url";
 import { QUERY_KEYS } from "@/constants/keys";
-import { renderQueryKey } from "@/lib/renderQueryKey";
+import { renderQueryKey } from "@/lib/render-query-key";
 import type { HookApiInfiniteOptions, HookApiOptions, ResponsePaginationType } from "@/types";
 import type { IPublisher } from "@/types/schema/publisher";
 import type { SearchParam } from "@/types/search-param";

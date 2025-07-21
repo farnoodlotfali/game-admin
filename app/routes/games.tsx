@@ -3,7 +3,7 @@ import type { Route } from "./+types/game";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createLoader } from "nuqs";
 
-import { GamePage } from "@/components/pages/games";
+import { GameTable } from "@/components/pages/games/table";
 import { GameFilterBox } from "@/components/pages/games/filter-box";
 import { TableSkeleton } from "@/components/table/table-skeleton";
 import { gameQueryOptions, gameSearchParams } from "@/hooks/queries";
@@ -53,7 +53,7 @@ const Games = ({ loaderData }: Route.ComponentProps) => {
       <div>
         <GameFilterBox />
         <Suspense fallback={<TableSkeleton rows={Number(loaderData.limit) || 10} />}>
-          <GamePage />
+          <GameTable />
         </Suspense>
       </div>
     </HydrationBoundary>

@@ -26,7 +26,7 @@ const Header = () => {
       <ModeToggle />
       <Separator orientation="vertical" className="mx-3" />
 
-      <h5>{PAGE_NAME[pathname]}</h5>
+      <h1 className="text-base font-bold">{PAGE_NAME[pathname]}</h1>
 
       <Avatar className="ml-auto">
         <AvatarImage src="https://github.com/shadcn.png" />

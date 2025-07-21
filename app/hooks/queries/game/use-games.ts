@@ -5,7 +5,7 @@ import { createParser, createSerializer, parseAsJson, parseAsString } from "nuqs
 import { fetcher } from "@/api/axios";
 import { API_URL } from "@/constants/api-url";
 import { QUERY_KEYS } from "@/constants/keys";
-import { renderQueryKey } from "@/lib/renderQueryKey";
+import { renderQueryKey } from "@/lib/render-query-key";
 import type { HookApiOptions, ResponsePaginationType } from "@/types";
 import type { GamesResponse } from "@/types/game-response";
 import { genreArraySchema, type IGenre } from "@/types/schema/genre";
