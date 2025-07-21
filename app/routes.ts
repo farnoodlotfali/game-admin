@@ -4,7 +4,7 @@ import { PAGE_URL } from "./constants/page-url";
 
 export default [
   layout("layouts/panel-layout.tsx", [
-    index("routes/game.tsx"),
+    index("routes/games.tsx"),
     route(PAGE_URL.publishers, "routes/publishers.tsx"),
   ]),
   layout("layouts/auth-layout.tsx", [
