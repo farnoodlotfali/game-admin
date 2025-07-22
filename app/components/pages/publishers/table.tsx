@@ -16,7 +16,7 @@ const head_tables = [
   { label: "Image" },
 ];
 
-export const PublisherTable = () => {
+export const PublishersTable = () => {
   const [filters, setFilters] = useQueryStates(publisherSearchParams, {
     history: "replace",
   });
@@ -62,4 +62,3 @@ export const PublisherTable = () => {
   );
 };
 
-export default PublisherTable;

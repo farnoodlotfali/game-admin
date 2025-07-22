@@ -7,6 +7,7 @@ import { TextInput } from "./text-input";
 import { INPUT_TYPES } from "@/constants/input-types";
 import { cn } from "@/lib/utils";
 import type { FormInputsType } from "@/types/form-inputs-type";
+import { TextAreaInput } from "./textarea-input";
 
 type HandleInputTypeProps = {
   input: FormInputsType;
@@ -23,6 +24,8 @@ const HandleInputType = ({ control, input }: HandleInputTypeProps) => {
       return <SelectInput input={input} control={control} />;
     case INPUT_TYPES.PHOTO:
       return <PhotoInput input={input} control={control} />;
+    case INPUT_TYPES.TEXTAREA:
+      return <TextAreaInput input={input} control={control} />;
     case INPUT_TYPES.CUSTOM:
       return <>{input.customView}</>;
 

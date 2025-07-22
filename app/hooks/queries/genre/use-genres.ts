@@ -23,7 +23,7 @@ type GenreFilters = {
   sort?: SearchParam;
 };
 
-export const publisherSearchParams = {
+export const genresSearchParams = {
   page: parseAsString.withDefault(""),
   limit: parseAsString.withDefault(""),
   order: parseAsString.withDefault(""),
@@ -31,14 +31,14 @@ export const publisherSearchParams = {
   q: parseAsString.withDefault(""),
 };
 
-const serialize = createSerializer(publisherSearchParams);
+const serialize = createSerializer(genresSearchParams);
 
 type Parameters = { options?: HookApiOptions; filters?: GenreFilters };
 type ParametersI = { options?: HookApiInfiniteOptions; filters?: GenreFilters };
 type GenreReturn = ResponsePaginationType<GenresResponse>;
 
 // queryOptions
-export const genreQueryOptions = ({ filters = {}, options }: Parameters) => {
+export const genresQueryOptions = ({ filters = {}, options }: Parameters) => {
   const queryParams = serialize(filters);
 
   return queryOptions({
@@ -50,7 +50,7 @@ export const genreQueryOptions = ({ filters = {}, options }: Parameters) => {
   });
 };
 // infinite queryOptions
-export const genreInfiniteQueryOptions = ({ filters, options }: ParametersI) => {
+export const genresInfiniteQueryOptions = ({ filters, options }: ParametersI) => {
   return infiniteQueryOptions({
     queryKey: renderQueryKey([QUERY_KEYS.genres, filters, { infinite: true }]),
     queryFn: ({ pageParam }) => {
@@ -71,21 +71,21 @@ export const genreInfiniteQueryOptions = ({ filters, options }: ParametersI) => 
 
 // normal
 export const useGenres = (props: Parameters) => {
-  const genres = useQuery<GenreReturn>(genreQueryOptions(props));
+  const genres = useQuery<GenreReturn>(genresQueryOptions(props));
 
   return genres;
 };
 
 // suspense
 export const useSuspenseGenres = (props: Parameters) => {
-  const genres = useSuspenseQuery<GenreReturn>(genreQueryOptions(props));
+  const genres = useSuspenseQuery<GenreReturn>(genresQueryOptions(props));
 
   return genres;
 };
 
 // normal Infinite genres
 export const useInfiniteGenres = (props: ParametersI) => {
-  const infiniteGenres = useInfiniteQuery<GenreReturn>(genreInfiniteQueryOptions(props));
+  const infiniteGenres = useInfiniteQuery<GenreReturn>(genresInfiniteQueryOptions(props));
 
   return infiniteGenres;
 };

@@ -17,14 +17,14 @@ const formSchema = z.object({
   country: z.string().optional(),
 });
 
-export const PublisherFilter = () => {
+export const PublishersFilter = () => {
   const [filters, setFilters] = useQueryStates(publisherSearchParams, {
-    history: "push",
+    history: "replace",
   });
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: filters,
+    values: filters,
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
@@ -64,7 +64,18 @@ export const PublisherFilter = () => {
           <form onSubmit={form.handleSubmit(onSubmit)} className="bg-secondary my-2 rounded-lg p-4">
             <FormInputs control={form.control} inputs={inputs} />
             <Button className="mt-3" type="submit">
-              Apply Filters
+              Apply
+            </Button>
+            <Button
+              className="mt-3 ml-3"
+              variant="outline"
+              type="button"
+              onClick={() => {
+                form.reset();
+                setFilters(null);
+              }}
+            >
+              Reset
             </Button>
           </form>
         </Form>

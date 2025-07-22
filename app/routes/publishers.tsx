@@ -4,8 +4,8 @@ import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createLoader } from "nuqs";
 
 import { CreatePublisherDialog } from "@/components/dialog/create-publisher-dialog";
-import { PublisherFilter } from "@/components/pages/publishers/filter-box";
-import { PublisherTable } from "@/components/pages/publishers/table";
+import { PublishersFilter } from "@/components/pages/publishers/filter-box";
+import { PublishersTable } from "@/components/pages/publishers/table";
 import { TableSkeleton } from "@/components/table/table-skeleton";
 import { publisherSearchParams, publishersQueryOptions } from "@/hooks/queries";
 import { getQueryClient } from "@/query-client";
@@ -57,9 +57,9 @@ const PublishersPage = ({ loaderData }: Route.ComponentProps) => {
         <CreatePublisherDialog />
       </div>
       <div>
-        <PublisherFilter />
+        <PublishersFilter />
         <Suspense fallback={<TableSkeleton rows={Number(loaderData.limit) || 10} />}>
-          <PublisherTable />
+          <PublishersTable />
         </Suspense>
       </div>
     </HydrationBoundary>
