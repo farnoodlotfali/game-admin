@@ -13,7 +13,6 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
-import { COUNTRIES } from "@/constants/countries";
 import { INPUT_TYPES } from "@/constants/input-types";
 import { QUERY_KEYS } from "@/constants/keys";
 import { useCreateGame } from "@/hooks/mutations";

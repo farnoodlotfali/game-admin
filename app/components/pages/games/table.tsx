@@ -69,14 +69,14 @@ export const GamesTable = () => {
               </TableCell>
               <TableCell>{game.genres.map((gen) => gen.name).join(",")} </TableCell>
               <TableCell>{game.platforms.map((plat) => plat.name).join(",")} </TableCell>
-              <TableCell className="min-w-[150px] ">
+              <TableCell className="min-w-[150px]">
                 <img
                   src={game?.cover_image ? game.cover_image : noImg}
                   alt={game.title}
-                  className="size-10 rounded-full object-cover md:size-14 mx-auto"
+                  className="mx-auto size-10 rounded-full object-cover md:size-14"
                 />
               </TableCell>
-              <TableCell  >{game.description} </TableCell>
+              <TableCell>{game.description} </TableCell>
             </TableRow>
           );
         })}

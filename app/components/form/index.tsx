@@ -4,10 +4,10 @@ import { DateInput } from "./date-input";
 import { PhotoInput } from "./photo-input";
 import { SelectInput } from "./select-input";
 import { TextInput } from "./text-input";
+import { TextAreaInput } from "./textarea-input";
 import { INPUT_TYPES } from "@/constants/input-types";
 import { cn } from "@/lib/utils";
 import type { FormInputsType } from "@/types/form-inputs-type";
-import { TextAreaInput } from "./textarea-input";
 
 type HandleInputTypeProps = {
   input: FormInputsType;

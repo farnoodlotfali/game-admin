@@ -3,12 +3,12 @@ import type { Route } from "./+types/games";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createLoader } from "nuqs";
 
+import { CreateGameDialog } from "@/components/dialog/create-game-dialog";
 import { GamesFilterBox } from "@/components/pages/games/filter-box";
 import { GamesTable } from "@/components/pages/games/table";
 import { TableSkeleton } from "@/components/table/table-skeleton";
 import { gameQueryOptions, gameSearchParams } from "@/hooks/queries";
 import { getQueryClient } from "@/query-client";
-import { CreateGameDialog } from "@/components/dialog/create-game-dialog";
 
 export function meta() {
   return [
