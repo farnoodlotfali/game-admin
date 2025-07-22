@@ -1,6 +1,7 @@
 import { Link } from "react-router";
-import { ChevronUp, User2 } from "lucide-react";
+import { ChevronsUpDown, ChevronUp, User2 } from "lucide-react";
 
+import logo from "@/assets/img/controller/controller.png";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,15 +14,40 @@ import {
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
+  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
+import { PAGE_URL } from "@/constants/page-url";
 import { SIDEBAR_ITEMS } from "@/constants/sidebar-items";
 
 export function AppSidebar() {
   return (
     <Sidebar variant="sidebar" collapsible="icon">
+      <SidebarHeader>
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <Link to={PAGE_URL.home}>
+              <SidebarMenuButton
+                size="lg"
+                className="data-[state=open]:bg-sidebar-accent data-[state=open]:text-sidebar-accent-foreground cursor-pointer"
+              >
+                <img
+                  src={logo}
+                  alt="Game Admin logo "
+                  className="aspect-square size-8 rounded-lg"
+                />
+                <div className="grid flex-1 text-left text-sm leading-tight">
+                  <span className="truncate font-medium">Game Admin</span>
+                </div>
+
+                <ChevronsUpDown className="ml-auto" />
+              </SidebarMenuButton>
+            </Link>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
