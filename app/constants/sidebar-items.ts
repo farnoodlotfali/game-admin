@@ -1,12 +1,12 @@
-import { Component, Database, Home, Layers, Server } from "lucide-react";
+import { Component, Drama, Gamepad2, Server } from "lucide-react";
 
 import { PAGE_URL } from "./page-url";
 
 export const SIDEBAR_ITEMS = [
   {
     title: "Games",
-    url: "/",
-    icon: Home,
+    url: PAGE_URL.home,
+    icon: Gamepad2,
   },
   {
     title: "Publishers",
@@ -15,17 +15,12 @@ export const SIDEBAR_ITEMS = [
   },
   {
     title: "Genres",
-    url: "/genre",
-    icon: Layers,
+    url: PAGE_URL.genres,
+    icon: Drama,
   },
   {
     title: "Platforms",
-    url: "/platform",
+    url: PAGE_URL.platforms,
     icon: Server,
-  },
-  {
-    title: "Supabase",
-    url: "/supabase",
-    icon: Database,
   },
 ];

@@ -14,9 +14,10 @@ type GlobalInputType = {
 
 export type TextInputType = {
   props?: React.ComponentProps<"input">;
-  name: string;
-  desc?: string;
-  label?: string;
+} & GlobalInputType;
+
+export type TextAreaInputType = {
+  props?: React.ComponentProps<"textarea">;
 } & GlobalInputType;
 
 export type DateInputType = {
@@ -55,4 +56,7 @@ export type FormInputsType =
     })
   | (PhotoInputType & {
       inputType: INPUT_TYPES.PHOTO;
+    })
+  | (TextAreaInputType & {
+      inputType: INPUT_TYPES.TEXTAREA;
     });

@@ -1,10 +1,11 @@
 export { useGames, gameQueryOptions, useSuspenseGames, gameSearchParams } from "./game/use-games";
 export {
-  genreQueryOptions,
+  genresQueryOptions,
   useGenres,
   useSuspenseGenres,
-  genreInfiniteQueryOptions,
+  genresInfiniteQueryOptions,
   useInfiniteGenres,
+  genresSearchParams,
 } from "./genre/use-genres";
 
 export {
