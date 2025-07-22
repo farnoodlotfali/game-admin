@@ -27,7 +27,7 @@ const formSchema = z.object({
   publisher_id: publisherArraySchema.nullish(),
 });
 
-export const GameFilterBox = () => {
+export const GamesFilterBox = () => {
   const [filters, setFilters] = useQueryStates(gameSearchParams, {
     history: "replace",
   });
@@ -98,7 +98,7 @@ export const GameFilterBox = () => {
             <FormInputs control={form.control} inputs={inputs} />
 
             <Button className="mt-3" type="submit">
-              Submit
+              Apply
             </Button>
             <Button
               className="mt-3 ml-3"

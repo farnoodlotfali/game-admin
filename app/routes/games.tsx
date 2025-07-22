@@ -3,11 +3,12 @@ import type { Route } from "./+types/games";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createLoader } from "nuqs";
 
-import { GameFilterBox } from "@/components/pages/games/filter-box";
+import { GamesFilterBox } from "@/components/pages/games/filter-box";
 import { GamesTable } from "@/components/pages/games/table";
 import { TableSkeleton } from "@/components/table/table-skeleton";
 import { gameQueryOptions, gameSearchParams } from "@/hooks/queries";
 import { getQueryClient } from "@/query-client";
+import { CreateGameDialog } from "@/components/dialog/create-game-dialog";
 
 export function meta() {
   return [
@@ -50,8 +51,11 @@ export function clientLoader({ request }: Route.LoaderArgs) {
 const Games = ({ loaderData }: Route.ComponentProps) => {
   return (
     <HydrationBoundary state={loaderData.dehydratedState}>
+      <div className="mb-4">
+        <CreateGameDialog />
+      </div>
       <div>
-        <GameFilterBox />
+        <GamesFilterBox />
         <Suspense fallback={<TableSkeleton rows={Number(loaderData.limit) || 10} />}>
           <GamesTable />
         </Suspense>
