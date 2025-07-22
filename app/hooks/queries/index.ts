@@ -17,9 +17,10 @@ export {
   useInfinitePublishers,
 } from "./publisher/use-publishers";
 export {
-  platformInfiniteQueryOptions,
-  platformQueryOptions,
+  platformsInfiniteQueryOptions,
+  platformsQueryOptions,
   useInfinitePlatforms,
   usePlatforms,
   useSuspensePlatforms,
+  platformsSearchParams,
 } from "./platform/use-platforms";

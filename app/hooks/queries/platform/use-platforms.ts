@@ -23,23 +23,22 @@ type PlatformFilters = {
   sort?: SearchParam;
 };
 
-export const publisherSearchParams = {
+export const platformsSearchParams = {
   page: parseAsString.withDefault(""),
   limit: parseAsString.withDefault(""),
   order: parseAsString.withDefault(""),
   sort: parseAsString.withDefault(""),
   q: parseAsString.withDefault(""),
-  country: parseAsString.withDefault(""),
 };
 
-const serialize = createSerializer(publisherSearchParams);
+const serialize = createSerializer(platformsSearchParams);
 
 type Parameters = { options?: HookApiOptions; filters?: PlatformFilters };
 type ParametersI = { options?: HookApiInfiniteOptions; filters?: PlatformFilters };
 type PlatformReturn = ResponsePaginationType<PlatformsResponse>;
 
 // queryOptions
-export const platformQueryOptions = ({ filters = {}, options }: Parameters) => {
+export const platformsQueryOptions = ({ filters = {}, options }: Parameters) => {
   const queryParams = serialize(filters);
 
   return queryOptions({
@@ -51,7 +50,7 @@ export const platformQueryOptions = ({ filters = {}, options }: Parameters) => {
   });
 };
 // infinite queryOptions
-export const platformInfiniteQueryOptions = ({ filters, options }: ParametersI) => {
+export const platformsInfiniteQueryOptions = ({ filters, options }: ParametersI) => {
   return infiniteQueryOptions({
     queryKey: renderQueryKey([QUERY_KEYS.platforms, filters, { infinite: true }]),
     queryFn: ({ pageParam }) => {
@@ -71,21 +70,21 @@ export const platformInfiniteQueryOptions = ({ filters, options }: ParametersI) 
 
 // normal
 export const usePlatforms = (props: Parameters) => {
-  const platforms = useQuery<PlatformReturn>(platformQueryOptions(props));
+  const platforms = useQuery<PlatformReturn>(platformsQueryOptions(props));
 
   return platforms;
 };
 
 // suspense
 export const useSuspensePlatforms = (props: Parameters) => {
-  const platforms = useSuspenseQuery<PlatformReturn>(platformQueryOptions(props));
+  const platforms = useSuspenseQuery<PlatformReturn>(platformsQueryOptions(props));
 
   return platforms;
 };
 
 // normal Infinite platforms
 export const useInfinitePlatforms = (props: ParametersI) => {
-  const infinitePlatforms = useInfiniteQuery<PlatformReturn>(platformInfiniteQueryOptions(props));
+  const infinitePlatforms = useInfiniteQuery<PlatformReturn>(platformsInfiniteQueryOptions(props));
 
   return infinitePlatforms;
 };

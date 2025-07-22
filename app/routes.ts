@@ -7,6 +7,7 @@ export default [
     index("routes/games.tsx"),
     route(PAGE_URL.publishers, "routes/publishers.tsx"),
     route(PAGE_URL.genres, "routes/genres.tsx"),
+    route(PAGE_URL.platforms, "routes/platforms.tsx"),
   ]),
   layout("layouts/auth-layout.tsx", [
     route("about", "routes/about.tsx"),
