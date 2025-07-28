@@ -10,6 +10,7 @@ export default [
     route(PAGE_URL.platforms, "routes/platforms.tsx"),
   ]),
   layout("layouts/auth-layout.tsx", [
+    route("login", "routes/login.tsx"),
     route("about", "routes/about.tsx"),
     route("test", "routes/test.tsx"),
   ]),
