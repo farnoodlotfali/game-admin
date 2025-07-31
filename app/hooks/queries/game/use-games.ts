@@ -7,7 +7,7 @@ import { QUERY_KEYS } from "@/constants/keys";
 import { parseAsDate } from "@/lib/nuqs-parse-as-date";
 import { renderQueryKey } from "@/lib/render-query-key";
 import type { HookApiOptions, ResponsePaginationType } from "@/types";
-import type { GamesResponse } from "@/types/game-response";
+import type { GamesResponse } from "@/types/games-response";
 import { genreArraySchema, type IGenre } from "@/types/schema/genre";
 import { platformArraySchema } from "@/types/schema/platform";
 import { publisherArraySchema } from "@/types/schema/publisher";
@@ -43,7 +43,7 @@ type Parameters = { options?: HookApiOptions; filters?: GameFilters };
 type GameReturn = ResponsePaginationType<GamesResponse>;
 
 // queryOptions
-export const gameQueryOptions = ({ filters = {}, options }: Parameters) => {
+export const gamesQueryOptions = ({ filters = {}, options }: Parameters) => {
   const queryParams = serialize(filters);
   return queryOptions({
     queryKey: renderQueryKey([QUERY_KEYS.games, filters]),
@@ -56,14 +56,14 @@ export const gameQueryOptions = ({ filters = {}, options }: Parameters) => {
 
 // normal
 export const useGames = (props: Parameters) => {
-  const games = useQuery<GameReturn>(gameQueryOptions(props));
+  const games = useQuery<GameReturn>(gamesQueryOptions(props));
 
   return games;
 };
 
 // suspense
 export const useSuspenseGames = (props: Parameters) => {
-  const games = useSuspenseQuery<GameReturn>(gameQueryOptions(props));
+  const games = useSuspenseQuery<GameReturn>(gamesQueryOptions(props));
 
   return games;
 };

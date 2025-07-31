@@ -19,6 +19,11 @@ export interface ResponsePaginationType<T = []> {
   data: PaginationType<T>;
 }
 
+export type HookApiSimpleOptions = Omit<
+  UseQueryOptions<ResponseType<any>, Error, ResponseType<any>, QueryKey>,
+  "queryKey" | "queryFn"
+>;
+
 export type HookApiOptions = Omit<
   UseQueryOptions<ResponsePaginationType<any>, Error, ResponsePaginationType<any>, QueryKey>,
   "queryKey" | "queryFn"

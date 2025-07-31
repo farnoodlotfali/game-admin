@@ -11,20 +11,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { gameQueryOptions, useGames } from "@/hooks/queries";
+import { gamesQueryOptions, useGames } from "@/hooks/queries";
 import { getQueryClient } from "@/query-client";
 
 export async function loader() {
   const queryClient = getQueryClient();
 
-  await queryClient.prefetchQuery(gameQueryOptions({}));
+  await queryClient.prefetchQuery(gamesQueryOptions({}));
   return {
     dehydratedState: dehydrate(queryClient),
   };
 }
 export async function clientLoader() {
   const queryClient = getQueryClient();
-  await queryClient.prefetchQuery(gameQueryOptions({}));
+  await queryClient.prefetchQuery(gamesQueryOptions({}));
 
   return {
     dehydratedState: dehydrate(queryClient),
