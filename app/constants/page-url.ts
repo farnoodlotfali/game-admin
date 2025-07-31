@@ -4,4 +4,5 @@ export const PAGE_URL = {
   publishers: "/publishers",
   platforms: "/platforms",
   genres: "/genres",
+  login: "/login",
 };
