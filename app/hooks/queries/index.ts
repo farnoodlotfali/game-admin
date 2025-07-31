@@ -1,4 +1,4 @@
-export { useGames, gameQueryOptions, useSuspenseGames, gameSearchParams } from "./game/use-games";
+export { useGames, gamesQueryOptions, useSuspenseGames, gameSearchParams } from "./game/use-games";
 export {
   genresQueryOptions,
   useGenres,
@@ -24,3 +24,4 @@ export {
   useSuspensePlatforms,
   platformsSearchParams,
 } from "./platform/use-platforms";
+export { gameQueryOptions, useGame, useSuspenseGame } from "./game/use-game";

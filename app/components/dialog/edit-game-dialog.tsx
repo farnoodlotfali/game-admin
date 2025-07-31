@@ -1,21 +1,15 @@
-import { useState } from "react";
+import { Suspense, useEffect } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useQueryClient } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
-import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import { INPUT_TYPES } from "@/constants/input-types";
 import { QUERY_KEYS } from "@/constants/keys";
-import { useCreateGame } from "@/hooks/mutations";
+import { useEditGame } from "@/hooks/mutations";
+import { useSuspenseGame } from "@/hooks/queries";
 import type { FormInputsType } from "@/types/form-inputs-type";
 import { genreArraySchema } from "@/types/schema/genre";
 import { platformArraySchema } from "@/types/schema/platform";
@@ -25,28 +19,60 @@ import { MultiPlatformsChooser } from "../choosers/multi-platforms-chooser";
 import { PublishersChooser } from "../choosers/publisher-chooser";
 import { FormInputs } from "../form";
 import { LoadingButton } from "../loading-button";
+import { Skeleton } from "../ui/skeleton";
 
 const schema = z.object({
   title: z.string().min(2),
   release_date: z.date(),
   publisher: publisherSchema,
   description: z.string().nullish(),
-  cover_image: z.instanceof(Object).nullish(),
+  cover_image: z.union([z.string(), z.record(z.any())]).nullish(),
   genres: genreArraySchema.nonempty(),
   platforms: platformArraySchema.nonempty(),
 });
 
 type FormValues = z.infer<typeof schema>;
+type Props = {
+  id: number;
+  open: boolean;
+  onClose: () => void;
+};
+export function EditGameDialog(props: Props) {
+  return (
+    <Dialog open={props.open} onOpenChange={props.onClose}>
+      <DialogContent className="sm:max-w-lg">
+        <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+          <EditForm {...props} />
+        </Suspense>
+      </DialogContent>
+    </Dialog>
+  );
+}
 
-export function CreateGameDialog() {
-  const [open, setOpen] = useState(false);
+const EditForm = ({ id, onClose, open }: Props) => {
   const queryClient = useQueryClient();
 
+  const {
+    data: { data: gameData },
+    isSuccess,
+  } = useSuspenseGame({
+    id: id,
+    options: {
+      enabled: open && !!id,
+    },
+  });
   const form = useForm<FormValues>({
     resolver: zodResolver(schema),
   });
 
-  const createGameMutation = useCreateGame();
+  useEffect(() => {
+    if (isSuccess) {
+      form.reset(gameData as unknown as FormValues);
+      form.setValue("release_date", new Date(gameData.release_date));
+    }
+  }, [isSuccess, gameData]);
+
+  const editGameMutation = useEditGame();
 
   const inputs: FormInputsType[] = [
     {
@@ -94,45 +120,49 @@ export function CreateGameDialog() {
   ];
 
   const onSubmit = (values: FormValues) => {
-    createGameMutation.mutate(
+    const updateData = values;
+
+    editGameMutation.mutate(
       {
-        ...values,
-        release_date: values.release_date.toISOString(),
-        "genre_ids[]": values.genres.map((gen) => gen.id),
-        "platform_ids[]": values.platforms.map((pla) => pla.id),
-        publisher_id: values.publisher.id,
+        id: id,
+        data: {
+          title: values.title,
+          "genre_ids[]": values.genres.map((gen) => gen.id),
+          "platform_ids[]": values.platforms.map((pla) => pla.id),
+          publisher_id: values.publisher.id,
+          release_date: updateData.release_date.toISOString(),
+          cover_image: typeof values.cover_image === "string" ? undefined : values.cover_image,
+          description: values.description,
+        },
       },
       {
         onSuccess: () => {
-          setOpen(false);
+          onClose();
           form.reset();
-          queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.games] });
+          setTimeout(() => {
+            queryClient.invalidateQueries({ queryKey: [QUERY_KEYS.games] });
+          }, 500);
         },
       }
     );
   };
-
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger asChild>
-        <Button variant="default">+ Create Game</Button>
-      </DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
-        <DialogHeader>
-          <DialogTitle>Create New Game</DialogTitle>
-        </DialogHeader>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
-            <FormInputs control={form.control} inputs={inputs} className="md:grid-cols-1" />
+    <>
+      <DialogHeader>
+        <DialogTitle>Edit Game</DialogTitle>
+        <DialogDescription>{gameData.title}</DialogDescription>
+      </DialogHeader>
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4">
+          <FormInputs control={form.control} inputs={inputs} className="md:grid-cols-1" />
 
-            <div className="flex justify-end pt-2">
-              <LoadingButton type="submit" loading={createGameMutation.isPending}>
-                Create
-              </LoadingButton>
-            </div>
-          </form>
-        </Form>
-      </DialogContent>
-    </Dialog>
+          <div className="flex justify-end pt-2">
+            <LoadingButton type="submit" loading={editGameMutation.isPending}>
+              Update
+            </LoadingButton>
+          </div>
+        </form>
+      </Form>
+    </>
   );
-}
+};
