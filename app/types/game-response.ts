@@ -10,4 +10,3 @@ export type GameResponse = IGame & {
   screenshots: IScreenshot[];
   publisher: IPublisher;
 };
-export type GamesResponse = GameResponse[];

@@ -15,8 +15,18 @@ import { Form } from "@/components/ui/form";
 import { INPUT_TYPES } from "@/constants/input-types";
 import type { FormInputsType } from "@/types/form-inputs-type";
 
+export function meta() {
+  return [
+    { title: "Login" },
+    {
+      name: "description",
+      content: "Browse and manage games list.",
+    },
+  ];
+}
+
 const schema = z.object({
-  email: z.string().min(2),
+  email: z.string().email(),
   password: z.string().min(6),
 });
 

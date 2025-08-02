@@ -7,7 +7,7 @@ import { CreateGameDialog } from "@/components/dialog/create-game-dialog";
 import { GamesFilterBox } from "@/components/pages/games/filter-box";
 import { GamesTable } from "@/components/pages/games/table";
 import { TableSkeleton } from "@/components/table/table-skeleton";
-import { gameQueryOptions, gameSearchParams } from "@/hooks/queries";
+import { gamesQueryOptions, gameSearchParams } from "@/hooks/queries";
 import { getQueryClient } from "@/query-client";
 
 export function meta() {
@@ -27,7 +27,7 @@ export function loader({ request }: Route.LoaderArgs) {
 
   const filters = loadSearchParams(request);
 
-  queryClient.prefetchQuery(gameQueryOptions({ filters }));
+  queryClient.prefetchQuery(gamesQueryOptions({ filters }));
 
   return {
     dehydratedState: dehydrate(queryClient),
@@ -40,7 +40,7 @@ export function clientLoader({ request }: Route.LoaderArgs) {
   const queryClient = getQueryClient();
   const filters = loadSearchParams(request);
 
-  queryClient.prefetchQuery(gameQueryOptions({ filters }));
+  queryClient.prefetchQuery(gamesQueryOptions({ filters }));
 
   return {
     dehydratedState: dehydrate(queryClient),
