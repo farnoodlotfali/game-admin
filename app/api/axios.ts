@@ -4,6 +4,7 @@ import Cookies from "js-cookie";
 import { toast } from "sonner";
 
 import { USER_TOKEN } from "@/constants/cookies";
+import { PAGE_URL } from "@/constants/page-url";
 
 // import { PAGE_URL } from "@/constants/PageUrl";
 
@@ -41,7 +42,7 @@ const onError = (
 
   toast.error(msg ? `${msg} errMsg: ${errMsg}` : "Error!");
   if (e.response.status === 401) {
-    // window.location.href = PAGE_URL.auth.login;
+    window.location.href = PAGE_URL.login;
     Cookies.remove(USER_TOKEN);
   }
 
