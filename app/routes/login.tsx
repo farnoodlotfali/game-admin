@@ -77,7 +77,7 @@ const Login = () => {
       <img
         src={Shape3}
         alt="Shape 3"
-        className="animate-bounce-slow absolute bottom-1/5 left-1/5 z-20 hidden w-28 opacity-40 md:block"
+        className="animate-bounce-slow absolute bottom-[40px] left-1/5 z-20 hidden w-28 opacity-40 md:block lg:bottom-1/5"
       />
       <img
         src={Shape4}
@@ -87,7 +87,7 @@ const Login = () => {
       <img
         src={Shape5}
         alt="Shape 5"
-        className="animate-bounce-slow absolute bottom-1/2 left-1/6 z-20 hidden w-32 opacity-80 md:block"
+        className="animate-bounce-slow absolute bottom-1/2 left-[60px] z-20 hidden w-32 opacity-80 md:block lg:left-1/6"
       />
       <img
         src={Shape6}
@@ -96,37 +96,23 @@ const Login = () => {
       />
 
       {/* Outer glass container */}
-      <div className="relative flex min-h-[750px] w-[75%] items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-2 shadow-xl backdrop-blur-xl md:p-8">
+      <div className="relative flex min-h-[750px] w-[90%] items-center justify-center rounded-2xl border border-white/10 bg-white/5 p-2 shadow-xl backdrop-blur-xl sm:w-3/4 md:p-8">
         {/* Background glow effects */}
         <div className="absolute inset-0 -z-10">
-          <div className="animate-spin-slow absolute top-10 left-10 h-24 w-24 rounded-full bg-gradient-to-r from-purple-600 to-purple-900 opacity-30 blur-xl"></div>
-          <div className="animate-spin-slow absolute top-1/4 right-10 h-20 w-20 rounded-full bg-gradient-to-r from-cyan-500 to-blue-700 opacity-25 blur-xl"></div>
-          <div className="animate-spin-slow absolute bottom-20 left-1/5 h-28 w-28 rounded-full bg-gradient-to-r from-teal-500 to-green-700 opacity-20 blur-xl"></div>
-          <div className="animate-spin-slow absolute right-1/4 bottom-10 h-16 w-16 rounded-full bg-gradient-to-r from-gray-600 to-gray-900 opacity-25 blur-xl"></div>
+          <div className="animate-spin-slow absolute top-10 left-10 h-24 w-24 rounded-full bg-gradient-to-r from-purple-600 to-purple-900 opacity-30 blur-xl" />
+          <div className="animate-spin-slow absolute top-1/4 right-10 h-20 w-20 rounded-full bg-gradient-to-r from-cyan-500 to-blue-700 opacity-25 blur-xl" />
+          <div className="animate-spin-slow absolute bottom-20 left-1/5 h-28 w-28 rounded-full bg-gradient-to-r from-teal-500 to-green-700 opacity-20 blur-xl" />
+          <div className="animate-spin-slow absolute right-1/4 bottom-10 h-16 w-16 rounded-full bg-gradient-to-r from-gray-600 to-gray-900 opacity-25 blur-xl" />
         </div>
 
         {/* Inner card */}
         <div
-          className="relative w-[30rem] max-w-[450px] rounded-2xl bg-white/5 py-6 text-white shadow-[0_8px_32px_rgba(0,0,0,0.8)] backdrop-blur-[20px] md:py-12"
+          className="relative w-[30rem] max-w-[450px] rounded-2xl bg-white/5 py-6 text-white backdrop-blur-[20px] md:py-12"
           style={{
             boxShadow:
               "0 8px 32px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(255,255,255,0.05), inset 0 0 20px 10px rgba(255,255,255,0.02)",
           }}
         >
-          <div
-            className="pointer-events-none absolute top-0 left-0 h-[1px] w-full"
-            style={{
-              background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)",
-            }}
-          />
-          <div
-            className="pointer-events-none absolute top-0 left-0 h-full"
-            style={{
-              background:
-                "linear-gradient(180deg, rgba(255,255,255,0.1), transparent, rgba(255,255,255,0.05))",
-            }}
-          />
-
           <div className="flex flex-col items-start justify-center gap-5 px-5 md:px-10">
             <img
               src={logo}
@@ -135,9 +121,9 @@ const Login = () => {
             />
             <h2 className="py-4 text-lg font-semibold md:text-2xl">Login</h2>
             <Form {...form}>
-              <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-10">
+              <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
                 <FormInputs control={form.control} inputs={inputs} className="md:grid-cols-1" />
-                <div className="flex justify-start">
+                <div className="mt-10 flex justify-start">
                   <LoadingButton type="submit">Login</LoadingButton>
                 </div>
               </form>
